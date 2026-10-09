@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>استودیو نقرینو</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231b3f33'/%3E%3Ccircle cx='26' cy='34' r='11' fill='none' stroke='%23e9ecee' stroke-width='5'/%3E%3Ccircle cx='38' cy='30' r='11' fill='none' stroke='%23e9ecee' stroke-width='5'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/vz-ar-400.woff2" as="font" type="font/woff2" crossorigin>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+@font-face{font-family:Vz;font-weight:400;font-display:swap;src:url(fonts/vz-ar-400.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+200C-200F,U+FB50-FDFF,U+FE70-FEFF}
+@font-face{font-family:Vz;font-weight:600;font-display:swap;src:url(fonts/vz-ar-600.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+200C-200F,U+FB50-FDFF,U+FE70-FEFF}
+@font-face{font-family:Vz;font-weight:800;font-display:swap;src:url(fonts/vz-ar-800.woff2) format('woff2');unicode-range:U+0600-06FF,U+0750-077F,U+200C-200F,U+FB50-FDFF,U+FE70-FEFF}
+@font-face{font-family:Vz;font-weight:400;font-display:swap;src:url(fonts/vz-la-400.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2190-21FF,U+2212}
+@font-face{font-family:Vz;font-weight:600;font-display:swap;src:url(fonts/vz-la-600.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2190-21FF,U+2212}
+@font-face{font-family:Vz;font-weight:800;font-display:swap;src:url(fonts/vz-la-800.woff2) format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2190-21FF,U+2212}
+
+/* Silver day / deep-green night. Brand: green #1b3f33, cream #e1cfb4, copper #9b6144, silver logo. */
+:root{
+  --bg:#edf0ee; --surface:#ffffff; --raised:#f6f8f7; --ink:#14302a; --muted:#66766f; --line:rgba(20,48,42,.12);
+  --brand:#1b3f33; --brand-ink:#eef1f0; --accent:#9b6144; --accent-ink:#fff; --soft:#e5ebe8; --sel:#1b3f33; --sel-ink:#f2f4f3;
+  --ok:#2f7d5b; --warn:#a76512; --err:#b4483c; --glass:rgba(250,251,250,.72); --shadow:0 10px 30px rgba(20,48,42,.10);
+  --r:18px; --r-s:12px; --nav:64px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#0c1c17; --surface:#132a23; --raised:#18332b; --ink:#e9eeec; --muted:#97aaa2; --line:rgba(233,238,236,.10);
+  --brand:#173a30; --brand-ink:#eef1f0; --accent:#c4835f; --accent-ink:#1a120d; --soft:#1c3a31; --sel:#e1cfb4; --sel-ink:#16302a;
+  --ok:#5fbf91; --warn:#e2a24b; --err:#e57a6c; --glass:rgba(16,36,30,.72); --shadow:0 10px 30px rgba(0,0,0,.35);
+}}
+:root[data-theme=dark]{
+  --bg:#0c1c17; --surface:#132a23; --raised:#18332b; --ink:#e9eeec; --muted:#97aaa2; --line:rgba(233,238,236,.10);
+  --brand:#173a30; --brand-ink:#eef1f0; --accent:#c4835f; --accent-ink:#1a120d; --soft:#1c3a31; --sel:#e1cfb4; --sel-ink:#16302a;
+  --ok:#5fbf91; --warn:#e2a24b; --err:#e57a6c; --glass:rgba(16,36,30,.72); --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.7 Vz,Tahoma,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hidden{display:none!important}
+
+/* header: the one memorable thing — the silver logotype on the brand green */
+header{background:var(--brand);color:var(--brand-ink);padding:calc(env(safe-area-inset-top) + 14px) 16px 22px;position:relative;overflow:hidden}
+header .row{max-width:680px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{height:42px;width:auto;display:block}
+.sheen{position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.18) 48%,transparent 60%);transform:translateX(120%);pointer-events:none}
+.loaded .sheen{animation:sheen 1.6s .2s ease-out 1 both}
+@keyframes sheen{to{transform:translateX(-120%)}}
+@media (prefers-reduced-motion:reduce){.loaded .sheen{animation:none}}
+.who{display:flex;align-items:center;gap:8px;border:1px solid rgba(238,241,240,.22);background:rgba(238,241,240,.06);border-radius:999px;padding:5px 6px 5px 12px;color:var(--brand-ink);font-size:13px}
+.who b{font-weight:600}
+.who i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(238,241,240,.14);font-size:13px}
+.sub{max-width:680px;margin:6px auto 0;font-size:13px;opacity:.78}
+
+main{max-width:680px;margin:0 auto;padding:16px 16px calc(var(--nav) + 120px)}
+h2{font-size:19px;font-weight:800;margin:6px 0 2px;letter-spacing:-.2px}
+h3{font-size:15px;font-weight:600;margin:0}
+.lead{color:var(--muted);font-size:13.5px;margin:0 0 14px}
+.group{background:var(--surface);border-radius:var(--r);padding:14px;margin:12px 0;box-shadow:var(--shadow)}
+.group>.gh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+.hint{color:var(--muted);font-size:12.5px}
+.err{color:var(--err)}
+
+/* photo */
+.drop{display:grid;place-items:center;text-align:center;min-height:190px;border:1.5px dashed var(--line);border-radius:var(--r);background:var(--raised);position:relative;overflow:hidden}
+.drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:var(--raised)}
+.drop .ph{padding:18px;color:var(--muted)}
+.drop .ph strong{display:block;color:var(--ink);font-size:16px;margin-bottom:2px}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop .x{position:absolute;top:10px;left:10px;z-index:2;border:0;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;padding:4px 12px;font-size:12.5px}
+
+/* chips & segmented */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chip{border:1px solid var(--line);background:var(--raised);border-radius:999px;padding:7px 14px;font-size:14px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+.chip[aria-pressed=true]{background:var(--sel);color:var(--sel-ink);border-color:var(--sel)}
+.chip[disabled]{opacity:.42;cursor:not-allowed}
+.chip .lk{font-size:11px}
+.dot{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--raised);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:10px;padding:9px 6px;font-weight:600;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.seg button[disabled]{opacity:.4}
+
+/* fields */
+label.f{display:block;margin:10px 0}
+label.f>span{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.in{width:100%;border:1px solid var(--line);background:var(--raised);border-radius:var(--r-s);padding:10px 12px;outline:none;transition:border-color .15s}
+.in:focus{border-color:var(--accent)}
+textarea.in{min-height:84px;resize:vertical;line-height:1.8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.unit{position:relative}
+.unit .in{padding-left:44px;direction:ltr;text-align:right}
+.unit em{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-style:normal;color:var(--muted);font-size:12.5px}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.sw:last-child{border-bottom:0}
+.tg{appearance:none;width:44px;height:26px;border-radius:99px;background:var(--line);position:relative;flex:none;transition:background .15s}
+.tg::after{content:'';position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
+.tg:checked{background:var(--ok)}.tg:checked::after{transform:translateX(-18px)}
+
+/* buttons */
+.btn{border:0;border-radius:14px;padding:12px 16px;font-weight:700;background:var(--soft);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.pri{background:var(--accent);color:var(--accent-ink)}
+.btn.dark{background:var(--sel);color:var(--sel-ink)}
+.btn.danger{background:transparent;color:var(--err);border:1px solid color-mix(in srgb,var(--err) 40%,transparent)}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:10px}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.55}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:10px}
+
+/* SKU preview + action bar */
+.sku{direction:ltr;text-align:left;font-weight:800;letter-spacing:.4px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.sku small{color:var(--muted);font-weight:600}
+.dock{position:fixed;inset:auto 0 calc(var(--nav) + env(safe-area-inset-bottom));z-index:20;padding:10px 16px}
+.dock .in-dock{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:20px;padding:10px 10px 10px 14px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.dock .meta{flex:1;min-width:0}
+.dock .meta .hint{display:block;line-height:1.4}
+
+/* glass bottom navigation */
+nav.tabs{position:fixed;inset:auto 0 0;z-index:30;background:var(--glass);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html:not(.lite) nav.tabs{backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}}
+html.lite nav.tabs{background:var(--surface)}
+nav.tabs .in-nav{max-width:680px;margin:0 auto;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;height:var(--nav)}
+nav.tabs button{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600}
+nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs button[aria-current=page]{color:var(--ink)}
+nav.tabs button[aria-current=page] svg{stroke:var(--accent)}
+
+/* products */
+.toolbar{display:flex;gap:8px;margin:8px 0 4px}
+.toolbar .in{flex:1}
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
+.pc{background:var(--surface);border-radius:var(--r);overflow:hidden;border:0;padding:0;text-align:right;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.pc .th{aspect-ratio:1;background:var(--raised);display:grid;place-items:center;color:var(--muted);font-size:12.5px;overflow:hidden;position:relative}
+.pc .th img{width:100%;height:100%;object-fit:cover}
+.pc .b{padding:9px 11px 11px}
+.pc .s{direction:ltr;text-align:left;font-weight:700;font-size:12.5px;letter-spacing:.3px;word-break:break-all;line-height:1.5}
+.pc .c{font-size:12.5px;color:var(--muted)}
+.badge{position:absolute;top:8px;right:8px;border-radius:999px;padding:2px 9px;font-size:11.5px;font-weight:700;background:var(--surface);color:var(--ink)}
+.badge.ready{color:var(--ok)}.badge.processing{color:var(--warn)}.badge.failed{color:var(--err)}.badge.published{background:var(--ok);color:#fff}
+.empty{text-align:center;color:var(--muted);padding:40px 16px}
+.empty strong{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+
+/* sheet */
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(5,15,12,.48);display:flex;align-items:flex-end;justify-content:center;animation:fade .18s ease-out}
+.sheet{background:var(--bg);width:100%;max-width:680px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:8px 16px calc(24px + env(safe-area-inset-bottom));animation:up .22s ease-out}
+.sheet .grab{width:42px;height:5px;border-radius:9px;background:var(--line);margin:6px auto 10px}
+.sheet .sh{display:flex;justify-content:space-between;align-items:center;gap:8px;position:sticky;top:-8px;background:var(--bg);padding:6px 0;z-index:2}
+.x0{border:0;background:var(--soft);border-radius:50%;width:34px;height:34px;font-size:18px;line-height:1}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}@keyframes fade{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.scrim,.sheet{animation:none}}
+.imgs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.im{position:relative;border-radius:var(--r-s);overflow:hidden;background:var(--raised);aspect-ratio:1;border:0;padding:0}
+.im img{width:100%;height:100%;object-fit:cover;display:block}
+.im .k{position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,.6);color:#fff;border-radius:999px;padding:1px 9px;font-size:11.5px}
+.im .del{position:absolute;top:6px;left:6px;border:0;border-radius:50%;width:28px;height:28px;background:rgba(0,0,0,.6);color:#fff;font-size:15px;line-height:1}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.thumbs .im{aspect-ratio:1}
+.add{border:1.5px dashed var(--line);background:transparent;border-radius:var(--r-s);aspect-ratio:1;color:var(--muted);font-size:13px;display:grid;place-items:center;position:relative;overflow:hidden}
+.add input{position:absolute;inset:0;opacity:0}
+.spec{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+.spec:last-child{border-bottom:0}
+.spec span{color:var(--muted);font-size:13.5px}
+.spec b{font-weight:600}
+.spec .v{display:flex;align-items:center;gap:8px}
+.cp{border:0;background:var(--soft);border-radius:8px;padding:3px 9px;font-size:12px}
+.light{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.92);display:grid;place-items:center}
+.light img{max-width:100vw;max-height:100vh;object-fit:contain}
+.list .li{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--line);background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:right}
+.list .li:last-child{border-bottom:0}
+.list .li .t{flex:1;min-width:0}
+.list .li .t small{display:block;color:var(--muted);font-size:12.5px}
+.av{width:38px;height:38px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-weight:800;flex:none;overflow:hidden}
+.av img{width:100%;height:100%;object-fit:cover}
+.stat{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
+.stat.off{background:var(--muted)}
+details.pr{border-bottom:1px solid var(--line);padding:10px 0}
+details.pr summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+details.pr summary::after{content:'+';color:var(--muted)}
+details.pr[open] summary::after{content:'–'}
+.mock{background:color-mix(in srgb,var(--warn) 14%,var(--surface));color:var(--ink);border-radius:var(--r-s);padding:10px 12px;font-size:13px;margin-top:12px}
+.quota{display:flex;gap:16px;font-size:12.5px;color:var(--muted)}
+.quota b{color:var(--ink)}
+.meter{height:6px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:4px}
+.meter i{display:block;height:100%;background:var(--accent)}
+#toast{position:fixed;left:50%;bottom:calc(var(--nav) + 90px);transform:translate(-50%,20px);opacity:0;z-index:90;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-size:14px;max-width:calc(100vw - 32px);transition:all .2s;pointer-events:none;box-shadow:var(--shadow)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.spin{width:18px;height:18px;border:2px solid currentColor;border-left-color:transparent;border-radius:50%;animation:rot .7s linear infinite;display:inline-block}
+@keyframes rot{to{transform:rotate(360deg)}}
+.skel{height:180px;border-radius:var(--r);background:linear-gradient(90deg,var(--raised),var(--soft),var(--raised));background-size:200% 100%;animation:sk 1.2s infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.login{max-width:380px;margin:20px auto}
+@media (min-width:720px){main{padding-top:24px}.plist{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#d9dde1"/><stop offset=".55" stop-color="#f4f6f7"/><stop offset=".8" stop-color="#b8bec4"/><stop offset="1" stop-color="#eef0f2"/>
+    </linearGradient>
+  </defs>
+  <symbol id="logo" viewBox="0 0 1004.83 388.44"><g fill="url(#silver)">%%LOGO%%</g></symbol>
+</svg>
+<header>
+  <div class="sheen"></div>
+  <div class="row">
+    <svg class="logo" viewBox="0 0 1004.83 388.44" role="img" aria-label="نقرینو"><use href="#logo"/></svg>
+    <button class="who hidden" id="who" data-a="account"></button>
+  </div>
+  <div class="sub" id="sub">استودیو عکاسی محصول</div>
+</header>
+<main id="view"><div class="skel"></div></main>
+<div class="dock hidden" id="dock"></div>
+<nav class="tabs hidden" id="nav"><div class="in-nav" id="navin"></div></nav>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="layer"></div>
+<script>
+'use strict';
+const tg = window.Telegram && window.Telegram.WebApp;
+const inTG = !!(tg && tg.initData);
+const qs = new URLSearchParams(location.search);
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+const FALLBACK_API = 'https://62417.sevenhost.cloud/webhook/nqs-api';
+const API = qs.get('api') || store.get('api') || FALLBACK_API;
+store.set('api', API);
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const faNum = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+const enNum = s => String(s || '').replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace('٫', '.');
+const haptic = (k = 'light') => { try { tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(k); } catch (e) {} };
+const ask = msg => new Promise(r => (inTG && tg.showConfirm) ? tg.showConfirm(msg, r) : r(confirm(msg)));
+
+// ---- theme: follows Telegram / phone, with a manual override ----
+function applyTheme() {
+  const pick = store.get('theme');
+  const auto = (tg && tg.colorScheme) || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.dataset.theme = pick || auto;
+  try { tg && tg.setHeaderColor && tg.setHeaderColor(getComputedStyle(document.documentElement).getPropertyValue('--brand').trim() || '#1b3f33'); tg && tg.setBackgroundColor && tg.setBackgroundColor(getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()); } catch (e) {}
+}
+// weak phones skip the blur
+if ((navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || matchMedia('(prefers-reduced-transparency: reduce)').matches) document.documentElement.classList.add('lite');
+applyTheme();
+if (tg) { try { tg.ready(); tg.expand(); tg.onEvent('themeChanged', applyTheme); } catch (e) {} }
+requestAnimationFrame(() => document.body.classList.add('loaded'));
+
+// ---- server ----
+class NeedLogin extends Error {}
+async function api(action, data = {}, files = []) {
+  const fd = new FormData();
+  fd.append('initData', (tg && tg.initData) || '');
+  fd.append('action', action);
+  for (const k of ['sku', 'q', 'status']) if (data[k] !== undefined) fd.append(k, data[k]);
+  fd.append('payload', JSON.stringify(data));
+  files.forEach((f, i) => fd.append('file' + i, f, f.name || `photo${i}.jpg`));
+  let res;
+  try { res = await fetch(API, { method: 'POST', body: fd }); }
+  catch (e) { throw new Error('اتصال به سرور برقرار نشد. اینترنت را بررسی کنید.'); }
+  const j = await res.json().catch(() => ({}));
+  if (j && j.needLogin && action !== 'login') { S.cfg = null; render(); throw new NeedLogin(j.error || ''); }
+  if (!res.ok || j.ok === false) throw new Error(j.error || `خطای سرور (${res.status})`);
+  return j;
+}
+function toast(msg, ms = 2800) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms); }
+const fail = e => { if (!(e instanceof NeedLogin)) toast(e.message, 5000); };
+async function shrink(file, max = 2560) {
+  try {
+    const bmp = await createImageBitmap(file);
+    const k = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    if (k === 1 && file.size < 5e6 && /jpe?g|png|webp/.test(file.type)) return file;
+    const c = document.createElement('canvas'); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.93));
+    return new File([blob], (file.name || 'photo').replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });
+  } catch (e) { return file; }
+}
+async function copy(text) {
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove(); }
+  haptic(); toast('کپی شد');
+}
+function download(url, name) {
+  if (!url) return;
+  try { if (tg && tg.downloadFile && tg.isVersionAtLeast && tg.isVersionAtLeast('8.0')) return tg.downloadFile({ url, file_name: name || 'noqrino.png' }); } catch (e) {}
+  if (tg && tg.openLink) tg.openLink(url); else window.open(url, '_blank');
+}
+
+// ---- state ----
+const S = {
+  cfg: null, tab: qs.get('tab') || 'new', busy: false,
+  f: { file: null, url: '', cat: '', mode: '', char: 'random', supplier: '', plating: '', gem: '', dims: {}, weight: '', note: '' },
+  products: null, pq: '', pstatus: '', lib: null, libSeg: 'cats', mg: '',
+};
+const P = k => !!(S.cfg && S.cfg.me.perms[k]);
+const canView = () => P('view_own') || P('view_all');
+const TABS = [
+  { id: 'new', fa: 'ساخت عکس', ok: () => P('generate'), icon: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>' },
+  { id: 'products', fa: 'محصولات', ok: canView, icon: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>' },
+  { id: 'lib', fa: 'کتابخانه', ok: () => P('library'), icon: '<path d="M5 4h4v16H5zM10 4h4v16h-4zM15.5 5l3.6-.9 3 15.6-3.6.9z"/>' },
+  { id: 'manage', fa: 'مدیریت', ok: () => P('users') || P('settings') || (S.cfg && S.cfg.me.owner), icon: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>' },
+];
+const GEM = { BL: '#2f6fd6', RE: '#c0392b', GR: '#2e8b57', WH: '#f4f4f4', BK: '#1f1f1f', PK: '#e58fb1', PU: '#7d4bb3', YE: '#e2b007', MX: 'conic-gradient(#c0392b,#e2b007,#2e8b57,#2f6fd6,#7d4bb3,#c0392b)' };
+const PLATE = { GO: 'linear-gradient(135deg,#f6dd8c,#c99a2e,#f3d27a)', WH: 'linear-gradient(135deg,#ffffff,#c4c9ce,#f2f4f5)', RO: 'linear-gradient(135deg,#f3c4b0,#b9735a,#efb8a1)' };
+const swatch = (map, code) => `<i class="dot" style="background:${map[code] || 'var(--accent)'}"></i>`;
+const STATUS = { ready: 'آماده', processing: 'در حال ساخت', failed: 'بدون عکس', published: 'روی سایت' };
+const dayShort = d => { const m = String(d || '').match(/^\d\d(\d\d)-(\d\d)-(\d\d)$/); return m ? m[1] + m[2] + m[3] : '######'; };
+
+// ---- rendering ----
+function render() {
+  const v = $('#view');
+  $('#dock').classList.add('hidden');
+  if (!S.cfg) { $('#nav').classList.add('hidden'); $('#who').classList.add('hidden'); $('#sub').textContent = 'استودیو عکاسی محصول'; v.innerHTML = vLogin(); return; }
+  const tabs = TABS.filter(t => t.ok());
+  if (!tabs.some(t => t.id === S.tab)) S.tab = tabs.length ? tabs[0].id : 'none';
+  $('#nav').classList.toggle('hidden', tabs.length < 2);
+  $('#navin').innerHTML = tabs.map(t => `<button data-a="tab" data-v="${t.id}" ${t.id === S.tab ? 'aria-current="page"' : ''}><svg viewBox="0 0 24 24">${t.icon}</svg>${t.fa}</button>`).join('');
+  const me = S.cfg.me;
+  $('#who').classList.remove('hidden');
+  $('#who').innerHTML = `<b>${esc(me.name)}</b><i>${esc((me.name || '؟').trim().charAt(0))}</i>`;
+  $('#sub').textContent = me.role;
+  v.innerHTML = S.tab === 'new' ? vCreate() : S.tab === 'products' ? vProducts() : S.tab === 'lib' ? vLibrary() : S.tab === 'manage' ? vManage()
+    : `<div class="empty"><strong>دسترسی‌ای برای شما تعریف نشده</strong>از مدیر بخواهید نقش شما را تنظیم کند.</div>`;
+  if (S.tab === 'new') renderDock();
+  if (S.tab === 'products' && !S.products) loadProducts();
+  if (S.tab === 'lib' && !S.lib) loadLibrary();
+}
+
+function vLogin() {
+  if (!inTG) return `<div class="empty"><strong>این صفحه را از داخل تلگرام باز کنید</strong>در ربات استودیو، دکمه «استودیو» را بزنید.</div>`;
+  return `<div class="login group">
+    <h2>ورود به استودیو</h2><p class="lead">نام کاربری و رمزی که مدیر به شما داده را وارد کنید.</p>
+    <label class="f"><span>نام کاربری</span><input class="in" id="lg-u" autocomplete="username" dir="ltr" autocapitalize="off"></label>
+    <label class="f"><span>رمز عبور</span><input class="in" id="lg-p" type="password" autocomplete="current-password" dir="ltr"></label>
+    <p class="err hidden" id="lg-e"></p>
+    <button class="btn pri block" data-a="login">ورود</button></div>`;
+}
+
+// ---------- create ----------
+function cats() { return S.cfg.categories || []; }
+function curCat() { return cats().find(c => c.id === S.f.cat); }
+function modesFor(c) { return c ? { industrial: c.i, modeling: c.m, both: c.i && c.m } : { industrial: false, modeling: false, both: false }; }
+function vCreate() {
+  const c = S.cfg, f = S.f, cat = curCat(), modes = modesFor(cat);
+  if (!f.supplier) f.supplier = c.supplier || (c.options.supplier[0] || {}).code || '';
+  const anyOpen = cats().some(x => x.i || x.m);
+  const q = c.me.quota;
+  const qline = k => q[k].limit < 0 ? `<b>${faNum(q[k].used)}</b>` : `<b>${faNum(q[k].used)}</b> از ${faNum(q[k].limit)}`;
+  return `
+  <h2>ساخت عکس محصول</h2>
+  <p class="lead">عکس محصول را بدهید؛ SKU خودکار ساخته می‌شود و عکس صنعتی یا مدلینگ تحویل می‌گیرید.</p>
+  ${c.mock ? `<div class="mock">سرویس تصویر روی حالت تست است؛ همان عکس خودتان برمی‌گردد.</div>` : ''}
+  <div class="group">
+    <div class="drop">${f.url ? `<img src="${f.url}" alt=""><button class="x" data-a="clearPhoto">عوض کردن عکس</button>` : `<div class="ph"><strong>عکس محصول</strong>از گالری یا دوربین انتخاب کنید</div>`}
+      <input type="file" accept="image/*" data-a="photo" aria-label="عکس محصول"></div>
+  </div>
+  <div class="group">
+    <div class="gh"><h3>تأمین‌کننده</h3><span class="hint">برای دفعه بعد به خاطر سپرده می‌شود</span></div>
+    <div class="chips scroll">${c.options.supplier.map(o => `<button class="chip" data-a="set" data-k="supplier" data-v="${esc(o.code)}" aria-pressed="${f.supplier === o.code}">${esc(o.name)} <small>${esc(o.code)}</small></button>`).join('')}</div>
+  </div>
+  <div class="group">
+    <div class="gh"><h3>دسته‌بندی</h3>${anyOpen ? '' : `<span class="hint">${P('library') ? 'اول در کتابخانه رفرنس اضافه کنید' : 'فعلاً در دسترس نیست'}</span>`}</div>
+    <div class="chips">${cats().map(x => { const lock = !x.i && !x.m; return `<button class="chip" data-a="cat" data-v="${esc(x.id)}" aria-pressed="${f.cat === x.id}" ${lock ? 'disabled' : ''}>${lock ? '<span class="lk">🔒</span>' : ''}${esc(x.fa)}</button>`; }).join('')}</div>
+    ${cat ? `<div style="margin-top:14px"><div class="seg" role="group" aria-label="نوع عکس">
+      ${[['industrial', 'صنعتی'], ['modeling', 'مدلینگ'], ['both', 'هر دو']].map(([k, t]) => `<button data-a="mode" data-v="${k}" aria-pressed="${f.mode === k}" ${modes[k] ? '' : 'disabled'}>${modes[k] ? '' : '🔒 '}${t}</button>`).join('')}
+    </div>${!modes.industrial || !modes.modeling ? `<p class="hint" style="margin:8px 2px 0">${P('library') ? 'گزینه قفل: برای این دسته در کتابخانه رفرنس یا مدل کم است.' : 'گزینه‌های قفل فعلاً برای این دسته در دسترس نیستند.'}</p>` : ''}</div>` : ''}
+  </div>
+  ${cat && (f.mode === 'modeling' || f.mode === 'both') ? `<div class="group"><div class="gh"><h3>مدل</h3></div>
+    <div class="chips"><button class="chip" data-a="set" data-k="char" data-v="random" aria-pressed="${f.char === 'random'}">🎲 تصادفی</button>
+    ${c.characters.map(m => `<button class="chip" data-a="set" data-k="char" data-v="${esc(m.id)}" aria-pressed="${f.char === m.id}">${esc(m.name)}</button>`).join('')}</div></div>` : ''}
+  <div class="group">
+    <div class="gh"><h3>آبکاری</h3></div>
+    <div class="chips">${c.options.plating.map(o => `<button class="chip" data-a="set" data-k="plating" data-v="${esc(o.code)}" aria-pressed="${f.plating === o.code}">${swatch(PLATE, o.code)}${esc(o.name)}</button>`).join('')}</div>
+    <div class="gh" style="margin-top:16px"><h3>رنگ نگین</h3><span class="hint">رنگ غالب</span></div>
+    <div class="chips"><button class="chip" data-a="set" data-k="gem" data-v="" aria-pressed="${!f.gem}">بدون نگین</button>
+    ${c.options.gem.map(o => `<button class="chip" data-a="set" data-k="gem" data-v="${esc(o.code)}" aria-pressed="${f.gem === o.code}">${swatch(GEM, o.code)}${esc(o.name)}</button>`).join('')}</div>
+  </div>
+  ${cat ? `<div class="group"><div class="gh"><h3>ابعاد و وزن</h3><span class="hint">برای مقیاس واقعی در عکس مدلینگ</span></div>
+    <div class="grid2">${(cat.dims || []).map((d, i) => `<label class="f"><span>${esc(d.n)}</span><div class="unit"><input class="in" inputmode="decimal" data-f="dim" data-i="${i}" value="${esc(f.dims[d.n] || '')}"><em>${esc(d.u)}</em></div></label>`).join('')}
+    <label class="f"><span>وزن</span><div class="unit"><input class="in" inputmode="decimal" data-f="weight" value="${esc(f.weight)}"><em>گرم</em></div></label></div></div>` : ''}
+  <div class="group"><label class="f" style="margin:0"><span>توضیح (اختیاری)</span><textarea class="in" data-f="note" placeholder="مثلا: قفل زنجیر باز باشد">${esc(f.note)}</textarea></label></div>
+  <div class="quota"><span>امروز ${qline('day')}</span><span>این ماه ${qline('month')}</span></div>`;
+}
+function skuPreview() {
+  const f = S.f, cat = curCat();
+  return [f.supplier || '??', cat ? cat.code : '??', f.plating || '??', dayShort(S.cfg.day), '##'].concat(f.gem ? [f.gem] : []).join('-');
+}
+function renderDock() {
+  const f = S.f, ready = f.file && f.cat && f.mode && f.supplier && f.plating;
+  const d = $('#dock'); d.classList.remove('hidden');
+  d.innerHTML = `<div class="in-dock"><div class="meta"><span class="sku">${esc(skuPreview())}</span><span class="hint">${ready ? (f.mode === 'both' ? '۲ عکس ساخته می‌شود' : '۱ عکس ساخته می‌شود') : 'عکس، دسته، نوع و آبکاری را انتخاب کنید'}</span></div>
+    <button class="btn pri" data-a="create" ${ready && !S.busy ? '' : 'disabled'}>${S.busy ? '<span class="spin"></span>' : 'ساخت عکس'}</button></div>`;
+}
+
+// ---------- products ----------
+async function loadProducts() {
+  try { const r = await api('products', { q: S.pq, status: S.pstatus }); S.products = r.products; }
+  catch (e) { S.products = []; fail(e); }
+  if (S.tab === 'products') render();
+}
+function vProducts() {
+  const list = S.products;
+  const st = [['', 'همه'], ['ready', 'آماده'], ['processing', 'در حال ساخت'], ['published', 'روی سایت']];
+  return `<h2>محصولات</h2><p class="lead">${P('view_all') ? 'همه محصولات ساخته‌شده' : 'محصولاتی که شما ساخته‌اید'}</p>
+  <div class="toolbar"><input class="in" type="search" placeholder="جستجوی SKU" dir="ltr" data-f="pq" value="${esc(S.pq)}"><button class="btn sm dark" data-a="search">جستجو</button></div>
+  <div class="chips scroll" style="margin-top:8px">${st.map(([k, t]) => `<button class="chip" data-a="pstatus" data-v="${k}" aria-pressed="${S.pstatus === k}">${t}</button>`).join('')}</div>
+  ${!list ? '<div class="plist"><div class="skel"></div><div class="skel"></div></div>'
+    : !list.length ? `<div class="empty"><strong>محصولی پیدا نشد</strong>${P('generate') ? 'از تب «ساخت عکس» اولین محصول را بسازید.' : ''}</div>`
+    : `<div class="plist">${list.map((p, i) => { const im = p.images[0]; return `<button class="pc" data-a="product" data-i="${i}">
+      <div class="th">${im ? `<img loading="lazy" src="${esc(im.thumb)}" alt="">` : (p.status === 'processing' ? '<span class="spin"></span>' : 'بدون عکس')}<span class="badge ${p.status}">${STATUS[p.status] || ''}</span></div>
+      <div class="b"><div class="s">${esc(p.sku)}</div><div class="c">${esc(p.category)}${p.creator ? ` · ${esc(p.creator)}` : ''}</div></div></button>`; }).join('')}</div>`}`;
+}
+function productSheet(p) {
+  const sp = p.specs;
+  // [label, shown value, value to copy, left-to-right?]
+  const specRows = sp ? [['SKU', p.sku, p.sku, 1], ['دسته', p.category, p.category], ['تأمین‌کننده', `${sp.supplier_fa} (${sp.supplier})`, sp.supplier_fa],
+    ['آبکاری', `${sp.plating_fa} (${sp.plating})`, sp.plating_fa]]
+    .concat(sp.gem ? [['رنگ نگین', `${sp.gem_fa} (${sp.gem})`, sp.gem_fa]] : [])
+    .concat((sp.dims || []).filter(d => String(d.v || '').trim()).map(d => [d.n, `${d.v} ${d.u || ''}`, d.v, 1]))
+    .concat(sp.weight ? [['وزن', `${sp.weight} گرم`, sp.weight]] : []) : [];
+  const chars = S.cfg.characters;
+  return `<div class="sh"><div><div class="sku">${esc(p.sku)}</div><span class="hint">${esc(p.category)} · ${STATUS[p.status] || ''}${p.creator ? ` · ${esc(p.creator)}` : ''}</span></div><button class="x0" data-a="close" aria-label="بستن">×</button></div>
+  ${p.images.length ? `<div class="imgs" style="margin-top:8px">${p.images.map((im, i) => `<div><button class="im" data-a="zoom" data-u="${esc(im.full)}"><img loading="lazy" src="${esc(im.thumb)}" alt=""><span class="k">${im.kind_fa}${im.char ? ' · ' + esc(im.char) : ''}</span></button>
+    ${im.dl ? `<button class="btn sm block" style="margin-top:6px" data-a="dl" data-u="${esc(im.dl)}" data-n="${esc(p.sku)}-${im.kind}.png">دانلود</button>` : ''}</div>`).join('')}</div>` : `<div class="empty">${p.status === 'processing' ? 'در حال ساخت عکس…' : 'هنوز عکسی ساخته نشده'}</div>`}
+  ${P('download') && p.images.length ? `<button class="btn dark block" style="margin-top:12px" data-a="sendtg" data-s="${esc(p.sku)}">ارسال عکس‌ها به تلگرام من</button>` : ''}
+  ${sp ? `<div class="group"><div class="gh"><h3>مشخصات</h3><button class="cp" data-a="copyall">کپی همه</button></div>
+    ${specRows.map(([k, v, c, ltr]) => `<div class="spec"><span>${esc(k)}</span><div class="v"><b ${ltr ? 'dir="ltr"' : ''}>${esc(v)}</b><button class="cp" data-a="copy" data-t="${esc(c)}">کپی</button></div></div>`).join('')}
+    ${sp.note ? `<p class="hint" style="margin:8px 0 0">📝 ${esc(sp.note)}</p>` : ''}</div>` : ''}
+  ${P('regenerate') ? `<div class="group"><div class="gh"><h3>ساخت دوباره</h3><span class="hint">با همان عکس محصول</span></div>
+    <div class="row"><button class="btn sm" data-a="regen" data-k="i" data-s="${esc(p.sku)}">صنعتی</button><button class="btn sm" data-a="regen" data-k="m" data-s="${esc(p.sku)}">مدلینگ</button>
+    <select class="in" style="flex:1;min-width:120px" id="rg-char"><option value="random">🎲 مدل تصادفی</option>${chars.map(m => `<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('')}</select></div></div>` : ''}
+  ${P('edit_products') ? `<div class="group"><div class="gh"><h3>ویرایش</h3></div>
+    <div class="sw"><span>روی سایت قرار گرفت</span><input type="checkbox" class="tg" id="pe-pub" ${p.status === 'published' ? 'checked' : ''}></div>
+    ${sp ? `<div class="grid2">${(sp.dims || []).map((d, i) => `<label class="f"><span>${esc(d.n)}</span><div class="unit"><input class="in pe-dim" inputmode="decimal" data-n="${esc(d.n)}" value="${esc(d.v || '')}"><em>${esc(d.u || '')}</em></div></label>`).join('')}
+    <label class="f"><span>وزن</span><div class="unit"><input class="in" id="pe-w" inputmode="decimal" value="${esc(sp.weight)}"><em>گرم</em></div></label></div>
+    <label class="f"><span>توضیح</span><textarea class="in" id="pe-n">${esc(sp.note)}</textarea></label>` : ''}
+    <button class="btn pri block" data-a="psave" data-s="${esc(p.sku)}">ذخیره</button></div>` : ''}`;
+}
+
+// ---------- library ----------
+async function loadLibrary() {
+  try { S.lib = await api('library'); } catch (e) { S.lib = { categories: [], characters: [], options: { supplier: [], plating: [], gem: [] } }; fail(e); }
+  if (S.tab === 'lib') render();
+}
+function vLibrary() {
+  const L = S.lib;
+  const seg = [['cats', 'دسته‌ها و رفرنس'], ['models', 'مدل‌ها'], ['codes', 'کدهای SKU']];
+  let body = '<div class="skel"></div>';
+  if (L && S.libSeg === 'cats') body = `<div class="group list">${L.categories.map((c, i) => `<button class="li" data-a="catEdit" data-i="${i}">
+      <div class="av">${c.ind[0] ? `<img loading="lazy" src="${esc(c.ind[0].thumb)}" alt="">` : esc(c.code || '?')}</div>
+      <div class="t"><b>${esc(c.fa)}</b> <span class="hint" dir="ltr">${esc(c.code)}</span><small>صنعتی ${faNum(c.ind.length)} · مدلینگ ${faNum(c.mod.length)}${c.active ? '' : ' · غیرفعال'}</small></div></button>`).join('') || '<div class="empty">دسته‌ای نیست</div>'}</div>
+    <button class="btn dark block" data-a="catEdit" data-i="-1">+ دسته جدید</button>`;
+  if (L && S.libSeg === 'models') body = `<div class="group list">${L.characters.map((m, i) => `<button class="li" data-a="modelEdit" data-i="${i}">
+      <div class="av">${m.sheets[0] ? `<img loading="lazy" src="${esc(m.sheets[0].thumb)}" alt="">` : '؟'}</div>
+      <div class="t"><b>${esc(m.name || 'بدون نام')}</b><small>${faNum(m.sheets.length)} عکس شیت${m.sheets.length ? '' : ' · برای استفاده عکس شیت اضافه کنید'}</small></div></button>`).join('') || '<div class="empty">هنوز مدلی اضافه نشده</div>'}</div>
+    <button class="btn dark block" data-a="modelEdit" data-i="-1">+ مدل جدید</button>`;
+  if (L && S.libSeg === 'codes') body = [['supplier', 'تأمین‌کننده‌ها'], ['plating', 'آبکاری'], ['gem', 'رنگ نگین']].map(([k, t]) => `<div class="group">
+      <div class="gh"><h3>${t}</h3><button class="cp" data-a="optEdit" data-k="${k}" data-v="">+ افزودن</button></div>
+      <div class="list">${L.options[k].map(o => `<button class="li" data-a="optEdit" data-k="${k}" data-v="${esc(o.code)}"><div class="av" dir="ltr">${k === 'gem' ? swatch(GEM, o.code) : k === 'plating' ? swatch(PLATE, o.code) : esc(o.code)}</div><div class="t"><b>${esc(o.name)}</b><small dir="ltr">${esc(o.code)}</small></div></button>`).join('')}</div></div>`).join('');
+  return `<h2>کتابخانه</h2><p class="lead">رفرنس‌های سبک عکاسی، مدل‌ها و کدهای SKU. این بخش فقط برای شما و افراد مجاز دیده می‌شود.</p>
+  <div class="seg" style="margin-bottom:8px">${seg.map(([k, t]) => `<button data-a="libSeg" data-v="${k}" aria-pressed="${S.libSeg === k}">${t}</button>`).join('')}</div>${body}`;
+}
+const refGrid = (items, type, catId) => `<div class="thumbs">${items.map(r => `<div class="im"><img loading="lazy" src="${esc(r.thumb)}" alt="" data-a="zoom" data-u="${esc(r.full)}"><button class="del" data-a="libDel" data-id="${r.id}" aria-label="حذف">×</button></div>`).join('')}
+  <label class="add">+ افزودن<input type="file" accept="image/*" multiple data-a="libAdd" data-type="${type}" data-cat="${esc(catId || '')}"></label></div>`;
+function catSheet(c) {
+  const isNew = !c;
+  c = c || { id: '', fa: '', en: '', code: '', dims: [], active: true, ind: [], mod: [] };
+  S.dimsEdit = (c.dims || []).map(d => ({ ...d }));
+  return `<div class="sh"><h2>${isNew ? 'دسته جدید' : esc(c.fa)}</h2><button class="x0" data-a="close" aria-label="بستن">×</button></div>
+  <div class="group"><div class="grid2"><label class="f"><span>نام فارسی</span><input class="in" id="ce-fa" value="${esc(c.fa)}"></label>
+    <label class="f"><span>کد SKU (۲ تا ۴ حرف)</span><input class="in" id="ce-code" dir="ltr" maxlength="4" value="${esc(c.code)}" style="text-transform:uppercase"></label></div>
+    <label class="f"><span>نام انگلیسی (برای هوش مصنوعی)</span><input class="in" id="ce-en" dir="ltr" value="${esc(c.en)}"></label>
+    <div class="gh" style="margin-top:12px"><h3>فیلدهای ابعاد</h3><button class="cp" data-a="dimAdd">+ فیلد</button></div>
+    <div id="ce-dims">${dimsRows()}</div>
+    ${isNew ? '' : `<div class="sw"><span>فعال</span><input type="checkbox" class="tg" id="ce-act" ${c.active ? 'checked' : ''}></div>`}
+    <button class="btn pri block" style="margin-top:10px" data-a="catSave" data-id="${esc(c.id)}">ذخیره دسته</button></div>
+  ${isNew ? '' : `<div class="group"><div class="gh"><h3>رفرنس صنعتی</h3><span class="hint">سبک چیدمان، نور و زاویه</span></div>${refGrid(c.ind, 'ind', c.id)}</div>
+  <div class="group"><div class="gh"><h3>رفرنس مدلینگ</h3><span class="hint">هر بار یکی تصادفی؛ فقط ژست و زاویه</span></div>${refGrid(c.mod, 'mod', c.id)}</div>
+  <button class="btn danger block" data-a="catDel" data-id="${esc(c.id)}">حذف دسته و رفرنس‌هایش</button>`}`;
+}
+function dimsRows() {
+  return (S.dimsEdit || []).map((d, i) => `<div class="grid3" style="align-items:end;grid-template-columns:1.3fr .7fr 1.3fr auto">
+    <label class="f"><span>نام</span><input class="in" data-f="dimE" data-i="${i}" data-p="n" value="${esc(d.n)}"></label>
+    <label class="f"><span>واحد</span><input class="in" dir="ltr" data-f="dimE" data-i="${i}" data-p="u" value="${esc(d.u)}"></label>
+    <label class="f"><span>انگلیسی</span><input class="in" dir="ltr" data-f="dimE" data-i="${i}" data-p="e" value="${esc(d.e)}"></label>
+    <button class="x0" style="margin-bottom:12px" data-a="dimDel" data-i="${i}" aria-label="حذف">×</button></div>`).join('') || '<p class="hint">فیلدی تعریف نشده</p>';
+}
+function modelSheet(m) {
+  const isNew = !m;
+  m = m || { id: '', name: '', desc: '', sheets: [] };
+  return `<div class="sh"><h2>${isNew ? 'مدل جدید' : esc(m.name)}</h2><button class="x0" data-a="close" aria-label="بستن">×</button></div>
+  <div class="group"><label class="f"><span>نام مدل (در انتخاب مدل نمایش داده می‌شود)</span><input class="in" id="me-n" value="${esc(m.name)}"></label>
+    <label class="f"><span>توضیح (اختیاری، برای هوش مصنوعی)</span><textarea class="in" id="me-d">${esc(m.desc)}</textarea></label>
+    ${isNew ? `<label class="btn dark block" style="position:relative;overflow:hidden">انتخاب عکس‌های شیت و ساخت مدل<input type="file" accept="image/*" multiple data-a="modelNew" style="position:absolute;inset:0;opacity:0"></label>`
+      : `<button class="btn pri block" data-a="modelSave" data-id="${esc(m.id)}">ذخیره</button>`}</div>
+  ${isNew ? '' : `<div class="group"><div class="gh"><h3>عکس‌های شیت</h3></div>${refGrid(m.sheets, 'char', '')}</div>
+  <button class="btn danger block" data-a="modelDel" data-id="${esc(m.id)}">حذف مدل</button>`}`;
+}
+function optSheet(kind, o) {
+  const t = { supplier: 'تأمین‌کننده', plating: 'آبکاری', gem: 'رنگ نگین' }[kind];
+  return `<div class="sh"><h2>${o ? esc(o.name) : t + ' جدید'}</h2><button class="x0" data-a="close" aria-label="بستن">×</button></div>
+  <div class="group"><div class="grid2"><label class="f"><span>کد (حروف انگلیسی)</span><input class="in" id="oe-c" dir="ltr" maxlength="${kind === 'supplier' ? 6 : 4}" style="text-transform:uppercase" value="${esc(o ? o.code : '')}"></label>
+    <label class="f"><span>نام</span><input class="in" id="oe-n" value="${esc(o ? o.name : '')}"></label></div>
+    <p class="hint">تغییر کد روی SKU محصولات قبلی اثری ندارد.</p>
+    <button class="btn pri block" data-a="optSave" data-k="${kind}" data-o="${esc(o ? o.code : '')}">ذخیره</button>
+    ${o ? `<button class="btn danger block" style="margin-top:8px" data-a="optDel" data-k="${kind}" data-o="${esc(o.code)}">حذف</button>` : ''}</div>`;
+}
+
+// ---------- manage ----------
+function vManage() {
+  const c = S.cfg, segs = [];
+  if (P('users')) segs.push(['users', 'کاربران'], ['roles', 'نقش‌ها']);
+  if (P('settings')) segs.push(['settings', 'تنظیمات'], ['prompts', 'پرامپت‌ها']);
+  if (c.me.owner) segs.push(['backup', 'بکاپ']);
+  if (!segs.some(s => s[0] === S.mg)) S.mg = segs[0] ? segs[0][0] : '';
+  let body = '';
+  if (S.mg === 'users') body = `<div class="group list">${(c.users || []).map((u, i) => `<button class="li" data-a="userEdit" data-i="${i}"><div class="av">${esc((u.display_name || u.username).charAt(0))}</div>
+      <div class="t"><b>${esc(u.display_name || u.username)}</b><small><span dir="ltr">${esc(u.username)}</span> · ${esc(u.role_name)}${u.linked ? ' · وصل به تلگرام' : ''}</small></div><i class="stat ${u.active ? '' : 'off'}"></i></button>`).join('') || '<div class="empty">هنوز کاربری نساخته‌اید</div>'}</div>
+    <button class="btn dark block" data-a="userEdit" data-i="-1">+ کاربر جدید</button>`;
+  if (S.mg === 'roles') body = `<div class="group list">${(c.roles || []).map((r, i) => `<button class="li" data-a="roleEdit" data-i="${i}"><div class="av">${faNum(r.users)}</div>
+      <div class="t"><b>${esc(r.name)}</b><small>روزانه ${r.quota_day < 0 ? '∞' : faNum(r.quota_day)} · ماهانه ${r.quota_month < 0 ? '∞' : faNum(r.quota_month)} · ${faNum(Object.values(r.perms).filter(Boolean).length)} دسترسی</small></div></button>`).join('')}</div>
+    <button class="btn dark block" data-a="roleEdit" data-i="-1">+ نقش جدید</button>`;
+  if (S.mg === 'settings') body = `<div class="group">${(c.settings || []).map(s => `<label class="f"><span>${esc(s.label)} <small class="hint">${esc(s.hint)}</small></span>
+      <div class="row" style="flex-wrap:nowrap"><input class="in" dir="ltr" id="st-${s.key}" value="${esc(s.value)}" ${s.key === 'image_api_key' ? 'placeholder="برای تغییر، کلید جدید را وارد کنید"' : ''}><button class="btn sm" data-a="setSave" data-k="${s.key}">ذخیره</button></div></label>`).join('')}</div>`;
+  if (S.mg === 'prompts') body = `<div class="group">${(c.prompts || []).map(p => `<details class="pr"><summary>${esc(p.label)}</summary>
+      <textarea class="in" dir="ltr" style="min-height:220px;margin-top:8px;font-size:13px" id="pr-${p.key}">${esc(p.prompt)}</textarea>
+      <button class="btn sm pri" style="margin-top:6px" data-a="prSave" data-k="${p.key}">ذخیره پرامپت</button></details>`).join('')}</div>`;
+  if (S.mg === 'backup') body = `<div class="group"><h3>بکاپ کامل</h3><p class="hint">همه جدول‌ها (تنظیمات، پرامپت‌ها، نقش‌ها، کاربران، کتابخانه، محصولات و عکس‌ها) در یک فایل JSON به چت تلگرام شما فرستاده می‌شود. برای جابه‌جایی سرور یا اطمینان، هفته‌ای یک بار بگیرید.</p>
+      <button class="btn pri block" data-a="backup">ارسال بکاپ به تلگرام</button></div>`;
+  return `<h2>مدیریت</h2><div class="seg" style="margin:10px 0">${segs.map(([k, t]) => `<button data-a="mg" data-v="${k}" aria-pressed="${S.mg === k}">${t}</button>`).join('')}</div>${body}`;
+}
+function userSheet(u) {
+  const roles = S.cfg.roles || [];
+  return `<div class="sh"><h2>${u ? esc(u.display_name || u.username) : 'کاربر جدید'}</h2><button class="x0" data-a="close" aria-label="بستن">×</button></div>
+  <div class="group"><label class="f"><span>نام کاربری (انگلیسی)</span><input class="in" id="ue-u" dir="ltr" autocapitalize="off" value="${esc(u ? u.username : '')}" ${u ? 'readonly' : ''}></label>
+    <label class="f"><span>نام نمایشی</span><input class="in" id="ue-d" value="${esc(u ? u.display_name : '')}"></label>
+    <label class="f"><span>${u ? 'رمز جدید (خالی = بدون تغییر)' : 'رمز عبور'}</span><div class="row" style="flex-wrap:nowrap"><input class="in" id="ue-p" dir="ltr"><button class="btn sm" data-a="genPass">ساخت رمز</button></div></label>
+    <label class="f"><span>نقش</span><select class="in" id="ue-r">${roles.map(r => `<option value="${esc(r.id)}" ${u && u.role === r.id ? 'selected' : ''}>${esc(r.name)}</option>`).join('')}</select></label>
+    <div class="sw"><span>فعال</span><input type="checkbox" class="tg" id="ue-a" ${!u || u.active ? 'checked' : ''}></div>
+    ${u && u.linked ? `<div class="sw"><span>جدا کردن از تلگرام فعلی</span><input type="checkbox" class="tg" id="ue-x"></div>` : ''}
+    <button class="btn pri block" style="margin-top:10px" data-a="userSave">ذخیره و کپی اطلاعات ورود</button>
+    ${u ? `<button class="btn danger block" style="margin-top:8px" data-a="userDel" data-u="${esc(u.username)}">حذف کاربر</button>` : ''}</div>`;
+}
+function roleSheet(r) {
+  const pl = S.cfg.permList || [];
+  const qv = v => (v == null || v < 0) ? '' : v;
+  return `<div class="sh"><h2>${r ? esc(r.name) : 'نقش جدید'}</h2><button class="x0" data-a="close" aria-label="بستن">×</button></div>
+  <div class="group"><label class="f"><span>نام نقش</span><input class="in" id="re-n" value="${esc(r ? r.name : '')}"></label>
+    <div class="gh" style="margin-top:12px"><h3>دسترسی‌ها</h3></div>
+    ${pl.map(p => `<div class="sw"><span>${esc(p.label)}</span><input type="checkbox" class="tg re-p" data-k="${p.key}" ${r && r.perms[p.key] ? 'checked' : ''}></div>`).join('')}</div>
+  <div class="group"><div class="gh"><h3>سقف ساخت عکس</h3><span class="hint">خالی = نامحدود؛ تولید دوباره هم حساب می‌شود</span></div>
+    <div class="grid2"><label class="f"><span>روزانه</span><input class="in" id="re-d" inputmode="numeric" placeholder="∞" value="${qv(r && r.quota_day)}"></label>
+    <label class="f"><span>ماهانه</span><input class="in" id="re-m" inputmode="numeric" placeholder="∞" value="${qv(r && r.quota_month)}"></label></div>
+    <button class="btn pri block" data-a="roleSave" data-id="${esc(r ? r.id : '')}">ذخیره نقش</button>
+    ${r ? `<button class="btn danger block" style="margin-top:8px" data-a="roleDel" data-id="${esc(r.id)}">حذف نقش</button>` : ''}</div>`;
+}
+function accountSheet() {
+  const me = S.cfg.me, q = me.quota;
+  const bar = x => x.limit < 0 ? `<span class="hint">نامحدود · ${faNum(x.used)} عکس</span>` : `<span class="hint">${faNum(x.used)} از ${faNum(x.limit)}</span><div class="meter"><i style="width:${Math.min(100, x.used / Math.max(1, x.limit) * 100)}%"></i></div>`;
+  const th = store.get('theme') || '';
+  return `<div class="sh"><h2>${esc(me.name)}</h2><button class="x0" data-a="close" aria-label="بستن">×</button></div>
+  <div class="group"><div class="spec"><span>نقش</span><b>${esc(me.role)}</b></div>${me.username ? `<div class="spec"><span>نام کاربری</span><b dir="ltr">${esc(me.username)}</b></div>` : ''}</div>
+  ${me.perms.generate ? `<div class="group"><div class="gh"><h3>عکس‌های امروز</h3></div>${bar(q.day)}<div class="gh" style="margin-top:12px"><h3>عکس‌های این ماه</h3></div>${bar(q.month)}</div>` : ''}
+  <div class="group"><div class="gh"><h3>ظاهر</h3></div><div class="seg">${[['', 'خودکار'], ['light', 'روز'], ['dark', 'شب']].map(([k, t]) => `<button data-a="theme" data-v="${k}" aria-pressed="${th === k}">${t}</button>`).join('')}</div></div>
+  ${me.owner ? '' : `<button class="btn danger block" data-a="logout">خروج از حساب</button>`}`;
+}
+
+// ---------- sheet & lightbox ----------
+function openSheet(html) {
+  const l = $('#layer');
+  l.innerHTML = `<div class="scrim" data-a="scrim"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheetBody">${html}</div></div></div>`;
+  document.body.style.overflow = 'hidden';
+  if (tg && tg.BackButton) { tg.BackButton.show(); tg.BackButton.onClick(closeSheet); }
+}
+function closeSheet() {
+  $('#layer').innerHTML = ''; document.body.style.overflow = '';
+  if (tg && tg.BackButton) { tg.BackButton.offClick(closeSheet); tg.BackButton.hide(); }
+}
+const sheetOpen = () => !!$('#sheetBody');
+function zoom(u) {
+  const d = document.createElement('div'); d.className = 'light'; d.innerHTML = `<img src="${esc(u)}" alt="">`;
+  d.onclick = () => d.remove(); document.body.appendChild(d);
+}
+
+// ---------- actions ----------
+async function busy(btn, fn) {
+  if (btn) { btn.disabled = true; btn._t = btn.innerHTML; btn.innerHTML = '<span class="spin"></span>'; }
+  try { return await fn(); } catch (e) { fail(e); } finally { if (btn && btn.isConnected) { btn.disabled = false; btn.innerHTML = btn._t; } }
+}
+const val = id => { const e = $('#' + id); return e ? e.value.trim() : ''; };
+const A = {
+  tab(el) { S.tab = el.dataset.v; haptic(); window.scrollTo(0, 0); render(); },
+  account() { openSheet(accountSheet()); },
+  theme(el) { store.set('theme', el.dataset.v); applyTheme(); $('#sheetBody').innerHTML = accountSheet(); },
+  async logout(el) { if (!await ask('از حساب خارج می‌شوید؟')) return; await busy(el, async () => { await api('logout'); closeSheet(); S.cfg = null; render(); }); },
+  async login(el) {
+    const username = val('lg-u'), password = $('#lg-p').value;
+    if (!username || !password) return;
+    await busy(el, async () => {
+      try { S.cfg = await api('login', { username, password }); haptic('medium'); render(); }
+      catch (e) { const er = $('#lg-e'); if (er) { er.textContent = e.message; er.classList.remove('hidden'); } }
+    });
+  },
+  async photo(el) {
+    const f = el.files && el.files[0]; if (!f) return;
+    S.f.file = await shrink(f); if (S.f.url) URL.revokeObjectURL(S.f.url); S.f.url = URL.createObjectURL(S.f.file); render();
+  },
+  clearPhoto() { S.f.file = null; if (S.f.url) URL.revokeObjectURL(S.f.url); S.f.url = ''; render(); },
+  set(el) { S.f[el.dataset.k] = el.dataset.v; haptic(); render(); },
+  cat(el) {
+    S.f.cat = el.dataset.v; const m = modesFor(curCat());
+    if (!m[S.f.mode]) S.f.mode = m.industrial ? 'industrial' : m.modeling ? 'modeling' : '';
+    S.f.dims = {}; haptic(); render();
+  },
+  mode(el) { S.f.mode = el.dataset.v; haptic(); render(); },
+  async create(el) {
+    const f = S.f, cat = curCat(); if (!f.file || !cat) return;
+    S.busy = true; renderDock();
+    try {
+      const r = await api('create', { category: f.cat, mode: f.mode, character: f.char, supplier: f.supplier, plating: f.plating, gem: f.gem,
+        dims: (cat.dims || []).map(d => ({ n: d.n, v: enNum(f.dims[d.n] || '') })), weight: enNum(f.weight), note: f.note }, [f.file]);
+      haptic('heavy');
+      S.cfg.me.quota = r.quota || S.cfg.me.quota; S.cfg.supplier = f.supplier;
+      Object.assign(S.f, { file: null, url: '', dims: {}, weight: '', note: '', gem: '' }); S.products = null;
+      render();
+      openSheet(`<div class="sh"><h2>ثبت شد</h2><button class="x0" data-a="close" aria-label="بستن">×</button></div>
+        <div class="group"><span class="hint">SKU محصول</span><div class="spread"><span class="sku">${esc(r.sku)}</span><button class="cp" data-a="copy" data-t="${esc(r.sku)}">کپی</button></div>
+        <p style="margin:10px 0 0">${esc(r.notice)}</p></div>${canView() ? '<button class="btn dark block" data-a="goProducts">رفتن به محصولات</button>' : ''}`);
+    } catch (e) { fail(e); }
+    S.busy = false; if (S.tab === 'new') renderDock();
+  },
+  goProducts() { closeSheet(); S.tab = 'products'; render(); },
+  search() { S.products = null; render(); },
+  pstatus(el) { S.pstatus = el.dataset.v; S.products = null; render(); },
+  product(el) { S.cur = S.products[+el.dataset.i]; openSheet(productSheet(S.cur)); },
+  zoom(el) { zoom(el.dataset.u); },
+  dl(el) { download(el.dataset.u, el.dataset.n); },
+  copy(el) { copy(el.dataset.t); },
+  copyall() { copy(S.cur && S.cur.text || ''); },
+  async sendtg(el) { await busy(el, async () => { const r = await api('send_tg', { sku: el.dataset.s }); toast(`${faNum(r.sent)} عکس به چت ربات ارسال شد`); }); },
+  async regen(el) {
+    await busy(el, async () => {
+      const r = await api('regen', { sku: el.dataset.s, kind: el.dataset.k, character: val('rg-char') || 'random' });
+      S.cfg.me.quota = r.quota || S.cfg.me.quota; toast(r.notice, 4000);
+    });
+  },
+  async psave(el) {
+    const sp = S.cur.specs;
+    const data = { sku: el.dataset.s, status: $('#pe-pub').checked ? 'published' : 'new' };
+    if (sp) { data.dims = [...document.querySelectorAll('.pe-dim')].map(i => ({ n: i.dataset.n, v: enNum(i.value.trim()) })); data.weight = enNum(val('pe-w')); data.note = val('pe-n'); }
+    await busy(el, async () => {
+      const r = await api('product_save', data);
+      const i = S.products.findIndex(x => x.sku === r.product.sku); if (i >= 0) S.products[i] = r.product; S.cur = r.product;
+      toast('ذخیره شد'); closeSheet(); render();
+    });
+  },
+  libSeg(el) { S.libSeg = el.dataset.v; render(); },
+  catEdit(el) { const i = +el.dataset.i; S.curCat = i >= 0 ? S.lib.categories[i] : null; openSheet(catSheet(S.curCat)); },
+  dimAdd() { S.dimsEdit.push({ n: '', u: 'mm', e: '' }); $('#ce-dims').innerHTML = dimsRows(); },
+  dimDel(el) { S.dimsEdit.splice(+el.dataset.i, 1); $('#ce-dims').innerHTML = dimsRows(); },
+  async catSave(el) {
+    const id = el.dataset.id, act = $('#ce-act');
+    await busy(el, async () => {
+      S.lib = await api('cat_save', { id, fa: val('ce-fa'), en: val('ce-en'), code: val('ce-code').toUpperCase(), dims: S.dimsEdit.filter(d => d.n.trim()), active: act ? act.checked : true });
+      toast('دسته ذخیره شد'); await refreshCfg(); closeSheet(); render();
+    });
+  },
+  async catDel(el) {
+    if (!await ask('این دسته و همه رفرنس‌هایش حذف شود؟')) return;
+    await busy(el, async () => { S.lib = await api('cat_del', { id: el.dataset.id }); await refreshCfg(); closeSheet(); render(); });
+  },
+  async libAdd(el) {
+    const files = [...(el.files || [])]; if (!files.length) return;
+    const type = el.dataset.type;
+    const label = el.closest('.add'); label.innerHTML = '<span class="spin"></span>';
+    try {
+      const prepared = await Promise.all(files.map(f => shrink(f)));
+      const data = type === 'char' ? { type, charId: S.curModel.id } : { type, category: el.dataset.cat };
+      const r = await api('lib_add', data, prepared);
+      toast(r.error || `${faNum(r.added)} عکس اضافه شد`);
+      await reloadLibSheet();
+    } catch (e) { fail(e); await reloadLibSheet(); }
+  },
+  async libDel(el) {
+    if (!await ask('این عکس از کتابخانه حذف شود؟')) return;
+    try { S.lib = await api('lib_del', { id: el.dataset.id }); await afterLibChange(); } catch (e) { fail(e); }
+  },
+  modelEdit(el) { const i = +el.dataset.i; S.curModel = i >= 0 ? S.lib.characters[i] : null; openSheet(modelSheet(S.curModel)); },
+  async modelNew(el) {
+    const name = val('me-n'); const files = [...(el.files || [])];
+    if (!name) { el.value = ''; return toast('اول نام مدل را بنویسید'); }
+    if (!files.length) return;
+    try {
+      const prepared = await Promise.all(files.map(f => shrink(f)));
+      const r = await api('lib_add', { type: 'char', charName: name, charDesc: val('me-d') }, prepared);
+      toast(r.error || 'مدل ساخته شد'); closeSheet(); S.lib = null; await refreshCfg(); render();
+    } catch (e) { fail(e); }
+  },
+  async modelSave(el) {
+    await busy(el, async () => { S.lib = await api('char_save', { charId: el.dataset.id, charName: val('me-n'), charDesc: val('me-d') }); await refreshCfg(); toast('ذخیره شد'); closeSheet(); render(); });
+  },
+  async modelDel(el) {
+    if (!await ask('این مدل و عکس‌های شیتش حذف شود؟')) return;
+    await busy(el, async () => { S.lib = await api('char_del', { charId: el.dataset.id }); await refreshCfg(); closeSheet(); render(); });
+  },
+  optEdit(el) { const k = el.dataset.k, o = S.lib.options[k].find(x => x.code === el.dataset.v); openSheet(optSheet(k, o)); },
+  async optSave(el) {
+    await busy(el, async () => { S.lib = await api('opt_save', { kind: el.dataset.k, code: val('oe-c').toUpperCase(), name: val('oe-n'), orig: el.dataset.o }); await refreshCfg(); closeSheet(); render(); });
+  },
+  async optDel(el) {
+    if (!await ask('حذف شود؟')) return;
+    await busy(el, async () => { S.lib = await api('opt_del', { kind: el.dataset.k, code: el.dataset.o }); await refreshCfg(); closeSheet(); render(); });
+  },
+  mg(el) { S.mg = el.dataset.v; render(); },
+  userEdit(el) { const i = +el.dataset.i; S.curUser = i >= 0 ? S.cfg.users[i] : null; openSheet(userSheet(S.curUser)); },
+  genPass() { const a = 'abcdefghjkmnpqrstuvwxyz23456789'; let p = ''; const r = crypto.getRandomValues(new Uint32Array(10)); r.forEach(n => { p += a[n % a.length]; }); $('#ue-p').value = p; },
+  async userSave(el) {
+    const u = S.curUser, username = val('ue-u').toLowerCase(), password = val('ue-p');
+    const data = { username, display_name: val('ue-d'), password, role: val('ue-r'), active: $('#ue-a').checked, unlink: !!($('#ue-x') && $('#ue-x').checked) };
+    await busy(el, async () => {
+      const cfg = await api('user_save', data); Object.assign(S.cfg, cfg);
+      if (password) await copy(`ورود به استودیو نقرینو\nنام کاربری: ${username}\nرمز: ${password}`); else toast('ذخیره شد');
+      closeSheet(); render();
+    });
+  },
+  async userDel(el) {
+    if (!await ask('این کاربر حذف شود؟')) return;
+    await busy(el, async () => { Object.assign(S.cfg, await api('user_delete', { username: el.dataset.u })); closeSheet(); render(); });
+  },
+  roleEdit(el) { const i = +el.dataset.i; openSheet(roleSheet(i >= 0 ? S.cfg.roles[i] : null)); },
+  async roleSave(el) {
+    const perms = {}; document.querySelectorAll('.re-p').forEach(c => { perms[c.dataset.k] = c.checked; });
+    const qd = enNum(val('re-d')), qm = enNum(val('re-m'));
+    await busy(el, async () => { Object.assign(S.cfg, await api('role_save', { id: el.dataset.id, name: val('re-n'), perms, quota_day: qd === '' ? -1 : qd, quota_month: qm === '' ? -1 : qm })); toast('نقش ذخیره شد'); closeSheet(); render(); });
+  },
+  async roleDel(el) {
+    if (!await ask('این نقش حذف شود؟')) return;
+    await busy(el, async () => { Object.assign(S.cfg, await api('role_del', { id: el.dataset.id })); closeSheet(); render(); });
+  },
+  async setSave(el) {
+    const k = el.dataset.k, v = val('st-' + k);
+    if (k === 'image_api_key' && v.startsWith('••••')) return toast('کلید جدید را وارد کنید');
+    await busy(el, async () => { Object.assign(S.cfg, await api('setting_save', { key: k, value: v })); toast('ذخیره شد'); render(); });
+  },
+  async prSave(el) {
+    const k = el.dataset.k;
+    await busy(el, async () => { Object.assign(S.cfg, await api('prompt_save', { key: k, prompt: $('#pr-' + k).value })); toast('پرامپت ذخیره شد'); });
+  },
+  async backup(el) { await busy(el, async () => { const r = await api('backup'); toast(`بکاپ (${faNum(Math.round(r.size / 1024))} کیلوبایت) به چت ربات ارسال شد`, 4000); }); },
+  close: closeSheet,
+  scrim(el, ev) { if (ev.target === el) closeSheet(); },
+};
+async function refreshCfg() { try { const c = await api('config'); S.cfg = c; } catch (e) {} }
+async function afterLibChange() {
+  if (S.curCat) { S.curCat = S.lib.categories.find(c => c.id === S.curCat.id) || null; if (sheetOpen() && S.curCat) $('#sheetBody').innerHTML = catSheet(S.curCat); }
+  else if (S.curModel) { S.curModel = S.lib.characters.find(c => c.id === S.curModel.id) || null; if (sheetOpen() && S.curModel) $('#sheetBody').innerHTML = modelSheet(S.curModel); }
+  await refreshCfg(); if (!sheetOpen()) render();
+}
+async function reloadLibSheet() { try { S.lib = await api('library'); } catch (e) {} await afterLibChange(); }
+
+document.addEventListener('click', ev => {
+  const el = ev.target.closest('[data-a]');
+  if (!el || el.tagName === 'INPUT' && el.type === 'file') return;
+  const fn = A[el.dataset.a]; if (!fn) return;
+  if (el.dataset.a !== 'scrim') ev.preventDefault();
+  fn(el, ev);
+});
+document.addEventListener('change', ev => {
+  const el = ev.target;
+  if (el.type === 'file' && el.dataset.a && A[el.dataset.a]) A[el.dataset.a](el, ev);
+});
+document.addEventListener('input', ev => {
+  const el = ev.target, f = el.dataset && el.dataset.f; if (!f) return;
+  if (f === 'dim') { const d = (curCat().dims || [])[+el.dataset.i]; if (d) S.f.dims[d.n] = el.value; }
+  else if (f === 'weight' || f === 'note') S.f[f] = el.value;
+  else if (f === 'pq') S.pq = el.value;
+  else if (f === 'dimE') S.dimsEdit[+el.dataset.i][el.dataset.p] = el.value;
+});
+document.addEventListener('keydown', ev => {
+  if (ev.key === 'Escape') { const l = $('.light'); if (l) l.remove(); else if (sheetOpen()) closeSheet(); }
+  if (ev.key === 'Enter' && ev.target.id === 'lg-p') A.login($('[data-a=login]'));
+  if (ev.key === 'Enter' && ev.target.dataset && ev.target.dataset.f === 'pq') A.search();
+});
+
+(async function boot() {
+  if (!inTG) { render(); return; }
+  try { S.cfg = await api('config'); } catch (e) { if (!(e instanceof NeedLogin)) { $('#view').innerHTML = `<div class="empty"><strong>اتصال برقرار نشد</strong>${esc(e.message)}</div>`; return; } }
+  render();
+})();
+</script>
+</body>
+</html>
