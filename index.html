@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>استودیو نقرینو</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css">
+<style>
+:root{
+  --green:#1b3f33; --cream:#e1cfb4; --copper:#9b6144;
+  --bg:var(--tg-theme-secondary-bg-color,#f3efe8);
+  --card:var(--tg-theme-bg-color,#ffffff);
+  --text:var(--tg-theme-text-color,#1d2321);
+  --hint:var(--tg-theme-hint-color,#7b827f);
+  --line:color-mix(in srgb,var(--text) 12%,transparent);
+  --ok:#2f7d5b; --err:#b4483c; --r:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,system-ui,sans-serif;font-size:15px}
+button,textarea,input{font:inherit;color:inherit}
+.hero{background:var(--green);color:var(--cream);padding:18px 16px 54px;position:relative}
+.hero h1{margin:0;font-size:20px;font-weight:800}
+.hero p{margin:4px 0 0;font-size:13px;opacity:.75}
+.hero svg{position:absolute;left:18px;top:16px;width:42px;height:42px}
+.tabs{display:flex;gap:6px;margin:-38px 16px 0;position:relative;background:var(--card);padding:5px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;color:var(--hint)}
+.tabs button.on{background:var(--green);color:var(--cream)}
+main{padding:14px 16px 110px}
+.card{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:12px;border:1px solid var(--line)}
+.label{font-size:13px;font-weight:700;color:var(--hint);margin:0 0 10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.drop{border:1.5px dashed color-mix(in srgb,var(--copper) 60%,transparent);border-radius:14px;padding:22px 10px;text-align:center;cursor:pointer;color:var(--hint)}
+.drop b{display:block;color:var(--text);font-size:16px;margin-bottom:2px}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.thumbs .t{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--line)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.thumbs .x{position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:22px;cursor:pointer;padding:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 14px;cursor:pointer;font-size:14px}
+.chip.on{background:var(--green);color:var(--cream);border-color:var(--green)}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--line);padding:4px;border-radius:12px}
+.seg button{border:0;background:transparent;padding:10px 4px;border-radius:9px;cursor:pointer;font-weight:600}
+.seg button.on{background:var(--card);color:var(--copper);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.chars{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.char{border:2px solid transparent;background:transparent;padding:4px 0;border-radius:14px;cursor:pointer;text-align:center}
+.char .av{width:52px;height:52px;margin:0 auto;border-radius:50%;background:color-mix(in srgb,var(--copper) 18%,transparent);color:var(--copper);display:grid;place-items:center;font-size:20px;font-weight:800}
+.char span{display:block;font-size:12px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.char.on{border-color:var(--copper)}
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:12px;background:transparent;padding:10px}
+textarea{min-height:64px;resize:vertical}
+.warn{font-size:12px;color:var(--copper);margin-top:8px}
+.hint{font-size:12px;color:var(--hint);line-height:1.8}
+.fb{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg)}
+.btn{width:100%;border:0;border-radius:14px;padding:14px;background:var(--copper);color:#fff;font-weight:800;font-size:16px;cursor:pointer}
+.btn:disabled{opacity:.45}
+.btn.ghost{background:transparent;color:var(--copper);border:1px solid var(--copper);font-size:14px;padding:11px}
+.row{display:flex;align-items:center;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-size:14px}
+.row .t small{color:var(--hint);font-size:12px}
+.mini{border:1px solid var(--line);background:transparent;border-radius:10px;padding:7px 11px;cursor:pointer;font-size:13px;white-space:nowrap}
+.mini.add{color:var(--copper);border-color:color-mix(in srgb,var(--copper) 50%,transparent);font-weight:700}
+.count{display:inline-block;min-width:22px;text-align:center;border-radius:8px;padding:0 6px;font-size:12px;background:var(--line);margin-inline-start:6px}
+.count.zero{background:color-mix(in srgb,var(--copper) 18%,transparent);color:var(--copper)}
+.done{text-align:center;padding:26px 14px}
+.done .big{font-size:42px}
+.done h2{margin:8px 0 4px;font-size:18px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;z-index:60;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1}
+.hidden{display:none!important}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end}
+.sheet .panel{background:var(--card);width:100%;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}
+.sheet h3{margin:0 0 12px;font-size:17px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;color:var(--hint);margin-bottom:6px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <svg viewBox="0 0 48 48" fill="none" stroke="#e1cfb4" stroke-width="2"><circle cx="19" cy="27" r="11"/><circle cx="29" cy="27" r="11"/><path d="M24 4l5 6-5 5-5-5z" fill="#e1cfb4" stroke="none"/></svg>
+  <h1>استودیو عکاسی نقرینو</h1>
+  <p id="hello">عکس محصول بده، عکس صنعتی و مدلینگ بگیر</p>
+</header>
+
+<nav class="tabs">
+  <button id="tab-new" class="on">ساخت عکس</button>
+  <button id="tab-lib">کتابخانه</button>
+</nav>
+
+<main>
+  <section id="view-new">
+    <div id="form">
+      <div class="card">
+        <div class="label">۱. عکس محصول <span id="pick-count"></span></div>
+        <div class="drop" id="drop"><b>انتخاب یا گرفتن عکس</b>چند عکس هم‌دسته را هم می‌توانید با هم بفرستید</div>
+        <input type="file" id="file" accept="image/*" multiple hidden>
+        <div class="thumbs" id="thumbs"></div>
+      </div>
+      <div class="card">
+        <div class="label">۲. نوع محصول</div>
+        <div class="chips" id="cats"></div>
+        <div class="warn hidden" id="cat-warn"></div>
+      </div>
+      <div class="card">
+        <div class="label">۳. نوع عکاسی</div>
+        <div class="seg" id="modes">
+          <button data-m="industrial" class="on">صنعتی</button>
+          <button data-m="modeling">مدلینگ</button>
+          <button data-m="both">هردو</button>
+        </div>
+      </div>
+      <div class="card hidden" id="char-card">
+        <div class="label">۴. کاراکتر</div>
+        <div class="chars" id="chars"></div>
+      </div>
+      <div class="card">
+        <div class="label">توضیح اضافه (اختیاری)</div>
+        <textarea id="note" maxlength="500" placeholder="مثلاً: قفل دستبند باز باشد / زاویه از بالا"></textarea>
+      </div>
+    </div>
+    <div class="card done hidden" id="done">
+      <div class="big">✨</div>
+      <h2 id="done-title">در حال ساخت</h2>
+      <p class="hint">هر عکس معمولاً ۲۰ تا ۶۰ ثانیه طول می‌کشد و نتیجه به‌صورت فایل با کیفیت کامل در چت ربات ارسال می‌شود. زیر هر نتیجه، دکمه «دوباره بساز» هست.</p>
+      <button class="btn" id="go-chat" style="margin-top:10px">رفتن به چت ربات</button>
+      <button class="btn ghost" id="again" style="margin-top:8px">ساخت عکس دیگر</button>
+    </div>
+  </section>
+
+  <section id="view-lib" class="hidden">
+    <div class="card">
+      <div class="label">کاراکترهای برند <button class="mini add" id="new-char">+ کاراکتر جدید</button></div>
+      <div id="char-list"></div>
+      <p class="hint" style="margin:8px 0 0">برای هر کاراکتر ۲ یا ۳ عکس شیت (چهره روبه‌رو، نیم‌رخ، تمام‌قد با پس‌زمینه ساده) کافی است.</p>
+    </div>
+    <div class="card">
+      <div class="label">رفرنس‌های سبک عکاسی</div>
+      <p class="hint" style="margin:0 0 6px">صنعتی: نور، زاویه و چیدمان. مدلینگ: فقط ژست، زاویه و نور (چهره مدل رفرنس استفاده نمی‌شود). در هر ساخت، حداکثر ۳ رفرنس به‌صورت رندوم انتخاب می‌شود.</p>
+      <div id="ref-list"></div>
+    </div>
+    <p class="hint" style="text-align:center">هر فایلی که اینجا اضافه کنید، به‌عنوان سابقه در چت ربات هم ارسال می‌شود.</p>
+  </section>
+</main>
+
+<div class="fb hidden" id="fb"><button class="btn" id="fb-btn" disabled>ساخت عکس</button></div>
+<input type="file" id="lib-file" accept="image/*" multiple hidden>
+
+<div class="sheet hidden" id="char-sheet">
+  <div class="panel">
+    <h3 id="cs-title">کاراکتر جدید</h3>
+    <div class="field"><label>نام</label><input type="text" id="cs-name" maxlength="40" placeholder="مثلاً: سارا"></div>
+    <div class="field"><label>توضیح کوتاه به انگلیسی (اختیاری، به ثبات چهره کمک می‌کند)</label>
+      <textarea id="cs-desc" maxlength="400" dir="ltr" placeholder="woman, late 20s, warm olive skin, dark brown wavy shoulder-length hair"></textarea></div>
+    <div class="field" id="cs-files-field"><label>عکس‌های شیت</label>
+      <div class="drop" id="cs-drop"><b>انتخاب عکس‌ها</b>۲ تا ۳ عکس</div>
+      <div class="thumbs" id="cs-thumbs"></div></div>
+    <button class="btn" id="cs-save">ذخیره</button>
+    <button class="btn ghost" id="cs-cancel" style="margin-top:8px">انصراف</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const tg = window.Telegram && window.Telegram.WebApp;
+const inTelegram = !!(tg && tg.initData);
+const $ = s => document.querySelector(s);
+const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+// API address comes from the bot's menu button (?api=...). Fallback: paste your webhook URL here.
+const FALLBACK_API = '';
+const API = new URLSearchParams(location.search).get('api') || (() => { try { return localStorage.getItem('api'); } catch { return null; } })() || FALLBACK_API;
+try { if (API) localStorage.setItem('api', API); } catch {}
+
+const S = { cfg: null, files: [], cat: null, mode: 'industrial', char: 'random', busy: false, tab: 'new', csFiles: [], csEdit: null, libTarget: null };
+
+if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor && tg.setHeaderColor('#1b3f33'); }
+
+async function api(action, fields = {}, files = []) {
+  if (!API) throw new Error('آدرس سرور مشخص نیست. اپ را از دکمه «استودیو» داخل ربات باز کنید.');
+  const fd = new FormData();
+  fd.append('initData', (tg && tg.initData) || '');
+  fd.append('action', action);
+  for (const [k, v] of Object.entries(fields)) if (v !== undefined && v !== null) fd.append(k, v);
+  files.forEach((f, i) => fd.append('file' + i, f, f.name || `photo${i}.jpg`));
+  let res;
+  try { res = await fetch(API, { method: 'POST', body: fd }); }
+  catch { throw new Error('اتصال به سرور برقرار نشد. اینترنت/VPN را چک کنید.'); }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.ok === false) throw new Error(data.error || data.message || `خطای سرور (${res.status})`);
+  return data;
+}
+function toast(msg, ms = 2800) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), ms);
+}
+const haptic = (k = 'light') => tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(k);
+const confirmBox = msg => new Promise(r => (tg && tg.showConfirm && inTelegram) ? tg.showConfirm(msg, r) : r(confirm(msg)));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Downscale on the phone before upload (keeps detail, keeps request small).
+async function prepare(file, max = 2560) {
+  try {
+    const bmp = await createImageBitmap(file);
+    const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    if (scale === 1 && file.size < 5e6 && /jpe?g|png|webp/.test(file.type)) return file;
+    const c = document.createElement('canvas');
+    c.width = Math.round(bmp.width * scale); c.height = Math.round(bmp.height * scale);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.93));
+    return new File([blob], (file.name || 'photo').replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });
+  } catch { return file; }
+}
+
+// ---------------- create ----------------
+function renderCats() {
+  const box = $('#cats'); box.innerHTML = '';
+  for (const c of S.cfg.categories) {
+    const b = document.createElement('button');
+    b.className = 'chip' + (S.cat === c.id ? ' on' : '');
+    b.textContent = c.fa;
+    b.onclick = () => { S.cat = c.id; haptic(); renderCats(); updateButton(); };
+    box.append(b);
+  }
+  const c = S.cfg.categories.find(x => x.id === S.cat), msgs = [];
+  if (c && S.mode !== 'modeling' && !c.ind) msgs.push('برای این دسته رفرنس صنعتی ندارید؛ سبک پیش‌فرض استفاده می‌شود.');
+  if (c && S.mode !== 'industrial' && !c.mod) msgs.push('رفرنس مدلینگ ندارید؛ ژست پیش‌فرض استفاده می‌شود.');
+  if (S.mode !== 'industrial' && !usableChars().length) msgs.push('هنوز کاراکتری ندارید؛ از تب «کتابخانه» اضافه کنید.');
+  $('#cat-warn').textContent = msgs.join(' '); $('#cat-warn').classList.toggle('hidden', !msgs.length);
+}
+const usableChars = () => S.cfg.characters.filter(c => c.sheets > 0);
+function renderChars() {
+  const box = $('#chars'); box.innerHTML = '';
+  const items = [{ id: 'random', name: 'رندوم' }, ...usableChars()];
+  if (!items.some(c => c.id === S.char)) S.char = 'random';
+  for (const c of items) {
+    const b = document.createElement('button');
+    b.className = 'char' + (S.char === c.id ? ' on' : '');
+    b.innerHTML = `<div class="av">${c.id === 'random' ? '🎲' : esc(c.name.trim()[0] || '?')}</div><span>${esc(c.name)}</span>`;
+    b.onclick = () => { S.char = c.id; haptic(); renderChars(); };
+    box.append(b);
+  }
+}
+function renderModes() {
+  document.querySelectorAll('#modes button').forEach(b => b.classList.toggle('on', b.dataset.m === S.mode));
+  $('#char-card').classList.toggle('hidden', S.mode === 'industrial');
+  renderCats(); updateButton();
+}
+document.querySelectorAll('#modes button').forEach(b => b.onclick = () => { S.mode = b.dataset.m; haptic(); renderModes(); });
+
+$('#drop').onclick = () => $('#file').click();
+$('#file').onchange = e => { for (const f of e.target.files) S.files.push({ file: f, url: URL.createObjectURL(f) }); e.target.value = ''; renderThumbs(); updateButton(); };
+function renderThumbs() {
+  const box = $('#thumbs'); box.innerHTML = '';
+  S.files.forEach((f, i) => {
+    const d = document.createElement('div'); d.className = 't';
+    d.innerHTML = `<img src="${f.url}" alt=""><button class="x">✕</button>`;
+    d.querySelector('.x').onclick = () => { URL.revokeObjectURL(f.url); S.files.splice(i, 1); renderThumbs(); updateButton(); };
+    box.append(d);
+  });
+  $('#pick-count').textContent = S.files.length ? `${fa(S.files.length)} عکس` : '';
+}
+
+const showingForm = () => S.tab === 'new' && !$('#form').classList.contains('hidden');
+function buttonState() {
+  if (S.busy) return ['در حال ارسال…', false];
+  if (!S.files.length) return ['اول عکس محصول را انتخاب کنید', false];
+  if (!S.cat) return ['نوع محصول را انتخاب کنید', false];
+  return [`ساخت ${fa(S.files.length * (S.mode === 'both' ? 2 : 1))} عکس`, true];
+}
+function updateButton() {
+  const [text, ok] = buttonState();
+  if (inTelegram) {
+    if (showingForm()) tg.MainButton.setParams({ text, color: ok ? '#9b6144' : '#8a8f8d', text_color: '#ffffff', is_active: ok, is_visible: true });
+    else tg.MainButton.hide();
+  } else {
+    $('#fb').classList.toggle('hidden', !showingForm());
+    $('#fb-btn').textContent = text; $('#fb-btn').disabled = !ok;
+  }
+}
+
+async function submit() {
+  if (!buttonState()[1] || S.busy) return;
+  S.busy = true; updateButton(); tg && tg.MainButton.showProgress && tg.MainButton.showProgress();
+  let sent = 0; const failed = [];
+  for (let i = 0; i < S.files.length; i++) {
+    if (S.files.length > 1) toast(`ارسال ${fa(i + 1)} از ${fa(S.files.length)}…`, 60000);
+    try {
+      const img = await prepare(S.files[i].file);
+      const r = await api('create', { category: S.cat, mode: S.mode, character: S.char, note: $('#note').value.trim() }, [img]);
+      sent += r.count || 1;
+    } catch (e) { failed.push(S.files[i]); toast(e.message, 5000); await sleep(1500); }
+  }
+  S.files.forEach(f => { if (!failed.includes(f)) URL.revokeObjectURL(f.url); });
+  S.files = failed; renderThumbs();
+  S.busy = false; tg && tg.MainButton.hideProgress && tg.MainButton.hideProgress();
+  if (sent) {
+    tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('success');
+    $('#done-title').textContent = `${fa(sent)} عکس در حال ساخت است`;
+    $('#form').classList.add('hidden'); $('#done').classList.remove('hidden');
+    $('.toast').classList.remove('show');
+  }
+  updateButton();
+}
+tg && tg.MainButton.onClick(submit);
+$('#fb-btn').onclick = submit;
+$('#go-chat').onclick = () => (tg && inTelegram ? tg.close() : toast('در تلگرام، اپ بسته می‌شود.'));
+$('#again').onclick = () => { $('#done').classList.add('hidden'); $('#form').classList.remove('hidden'); updateButton(); scrollTo(0, 0); };
+
+// ---------------- library ----------------
+function renderLibrary() {
+  const cl = $('#char-list'); cl.innerHTML = '';
+  if (!S.cfg.characters.length) cl.innerHTML = '<p class="hint" style="margin:0">هنوز کاراکتری اضافه نشده.</p>';
+  for (const c of S.cfg.characters) {
+    const row = document.createElement('div'); row.className = 'row';
+    row.innerHTML = `<div class="t"><b>${esc(c.name)}<span class="count ${c.sheets ? '' : 'zero'}">${fa(c.sheets)}</span></b><small dir="auto">${esc(c.desc || 'بدون توضیح')}</small></div>
+      <button class="mini add" data-a="add">+ عکس</button><button class="mini" data-a="edit">✏️</button><button class="mini" data-a="del">🗑</button>`;
+    row.querySelector('[data-a=add]').onclick = () => pickLib({ type: 'char', charId: c.id }, `شیت ${c.name}`);
+    row.querySelector('[data-a=edit]').onclick = () => openCharSheet(c);
+    row.querySelector('[data-a=del]').onclick = async () => {
+      if (!(await confirmBox(`کاراکتر «${c.name}» حذف شود؟`))) return;
+      run(() => api('lib_clear', { type: 'char', charId: c.id }), 'حذف شد');
+    };
+    cl.append(row);
+  }
+  const rl = $('#ref-list'); rl.innerHTML = '';
+  for (const c of S.cfg.categories) {
+    for (const [type, label] of [['ind', 'صنعتی'], ['mod', 'مدلینگ']]) {
+      const n = c[type];
+      const row = document.createElement('div'); row.className = 'row';
+      row.innerHTML = `<div class="t"><b>${esc(c.fa)} · ${label}<span class="count ${n ? '' : 'zero'}">${fa(n)}</span></b></div>
+        <button class="mini add">+ افزودن</button>${n ? '<button class="mini" data-del>🗑</button>' : ''}`;
+      row.querySelector('.add').onclick = () => pickLib({ type, category: c.id }, `${c.fa} · ${label}`);
+      const del = row.querySelector('[data-del]');
+      if (del) del.onclick = async () => {
+        if (!(await confirmBox(`همه رفرنس‌های «${c.fa} · ${label}» پاک شود؟`))) return;
+        run(() => api('lib_clear', { type, category: c.id }), 'پاک شد');
+      };
+      rl.append(row);
+    }
+  }
+}
+async function run(fn, okMsg) {
+  try { applyConfig(await fn()); haptic('medium'); if (okMsg) toast(okMsg); }
+  catch (e) { toast(e.message, 5000); }
+}
+function applyConfig(cfg) {
+  if (cfg.categories) S.cfg.categories = cfg.categories;
+  if (cfg.characters) S.cfg.characters = cfg.characters;
+  renderLibrary(); renderCats(); renderChars();
+}
+
+function pickLib(target, label) { S.libTarget = { target, label }; $('#lib-file').click(); }
+$('#lib-file').onchange = async e => {
+  const files = [...e.target.files]; e.target.value = '';
+  if (!files.length || !S.libTarget) return;
+  await uploadLib(S.libTarget.target, files, S.libTarget.label);
+};
+async function uploadLib(target, files, label, extra = {}) {
+  let added = 0;
+  try {
+    for (let i = 0; i < files.length; i += 3) {
+      toast(`آپلود ${label}: ${fa(Math.min(i + 3, files.length))} از ${fa(files.length)}…`, 60000);
+      const chunk = await Promise.all(files.slice(i, i + 3).map(f => prepare(f, 2048)));
+      const r = await api('lib_add', { ...target, ...(i === 0 ? extra : {}) }, chunk);
+      added += r.added || 0;
+      if (target.type === 'char' && !target.charId) target = { type: 'char', charId: newestCharId(r) };
+      applyConfig(r);
+      if (i + 3 < files.length) await sleep(1500);
+    }
+    toast(`✅ ${fa(added)} عکس اضافه شد`); haptic('medium');
+    return true;
+  } catch (e) { toast(e.message, 5000); return false; }
+}
+function newestCharId(r) {
+  const known = new Set((S.cfg.characters || []).map(c => c.id));
+  const fresh = (r.characters || []).find(c => !known.has(c.id));
+  return fresh ? fresh.id : (r.characters || []).slice(-1)[0].id;
+}
+
+// character sheet (new / edit)
+function openCharSheet(c) {
+  S.csEdit = c || null; S.csFiles = [];
+  $('#cs-title').textContent = c ? `ویرایش ${c.name}` : 'کاراکتر جدید';
+  $('#cs-name').value = c ? c.name : ''; $('#cs-desc').value = c ? c.desc : '';
+  $('#cs-files-field').classList.toggle('hidden', !!c);
+  renderCsThumbs();
+  $('#char-sheet').classList.remove('hidden'); tg && tg.MainButton.hide();
+  tg && tg.BackButton.show();
+}
+function closeCharSheet() { $('#char-sheet').classList.add('hidden'); tg && tg.BackButton.hide(); updateButton(); }
+$('#new-char').onclick = () => openCharSheet(null);
+$('#cs-cancel').onclick = closeCharSheet;
+tg && tg.BackButton.onClick(closeCharSheet);
+$('#cs-drop').onclick = () => { const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.multiple = true;
+  inp.onchange = () => { for (const f of inp.files) S.csFiles.push({ file: f, url: URL.createObjectURL(f) }); renderCsThumbs(); }; inp.click(); };
+function renderCsThumbs() {
+  const box = $('#cs-thumbs'); box.innerHTML = '';
+  S.csFiles.forEach((f, i) => {
+    const d = document.createElement('div'); d.className = 't';
+    d.innerHTML = `<img src="${f.url}" alt=""><button class="x">✕</button>`;
+    d.querySelector('.x').onclick = () => { S.csFiles.splice(i, 1); renderCsThumbs(); };
+    box.append(d);
+  });
+}
+$('#cs-save').onclick = async () => {
+  const name = $('#cs-name').value.trim(), desc = $('#cs-desc').value.trim();
+  if (!name) return toast('نام را بنویسید');
+  const btn = $('#cs-save'); btn.disabled = true;
+  if (S.csEdit) {
+    await run(() => api('char_update', { charId: S.csEdit.id, charName: name, charDesc: desc }), 'ذخیره شد');
+    btn.disabled = false; return closeCharSheet();
+  }
+  if (!S.csFiles.length) { btn.disabled = false; return toast('حداقل یک عکس شیت انتخاب کنید'); }
+  const ok = await uploadLib({ type: 'char' }, S.csFiles.map(f => f.file), name, { charName: name, charDesc: desc });
+  btn.disabled = false;
+  if (ok) closeCharSheet();
+};
+
+// ---------------- tabs & boot ----------------
+function switchTab(t) {
+  S.tab = t;
+  $('#tab-new').classList.toggle('on', t === 'new'); $('#tab-lib').classList.toggle('on', t === 'lib');
+  $('#view-new').classList.toggle('hidden', t !== 'new'); $('#view-lib').classList.toggle('hidden', t !== 'lib');
+  updateButton();
+}
+$('#tab-new').onclick = () => switchTab('new');
+$('#tab-lib').onclick = () => switchTab('lib');
+
+(async () => {
+  try {
+    S.cfg = await api('config');
+  } catch (e) {
+    document.querySelector('main').innerHTML = `<div class="card done"><div class="big">⚠️</div><p>${esc(e.message)}</p></div>`;
+    return;
+  }
+  const u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+  if (u && u.first_name) $('#hello').textContent = `سلام ${u.first_name} 👋`;
+  renderCats(); renderChars(); renderModes(); renderLibrary(); updateButton();
+  if (!S.cfg.characters.length && !S.cfg.categories.some(c => c.ind || c.mod)) toast('اول از تب «کتابخانه» رفرنس‌ها و کاراکترها را اضافه کنید.', 5000);
+})();
+</script>
+</body>
+</html>
