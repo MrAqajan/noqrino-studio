@@ -33,6 +33,8 @@
   --brand:#173a30; --brand-ink:#eef1f0; --accent:#c4835f; --accent-ink:#1a120d; --soft:#1c3a31; --sel:#e1cfb4; --sel-ink:#16302a;
   --ok:#5fbf91; --warn:#e2a24b; --err:#e57a6c; --glass:rgba(16,36,30,.72); --shadow:0 10px 30px rgba(0,0,0,.35);
 }
+html{--w:680px}
+@media (min-width:1000px){html{--w:1120px}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.7 Vz,Tahoma,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 button,input,textarea,select{font:inherit;color:inherit}
@@ -41,8 +43,8 @@ button{cursor:pointer}
 .hidden{display:none!important}
 
 /* header: the one memorable thing — the silver logotype on the brand green */
-header{background:var(--brand);color:var(--brand-ink);padding:calc(env(safe-area-inset-top) + 14px) 16px 22px;position:relative;overflow:hidden}
-header .row{max-width:680px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header{background:var(--brand);color:var(--brand-ink);padding:calc(max(env(safe-area-inset-top),var(--tg-safe-area-inset-top,0px)) + var(--tg-content-safe-area-inset-top,0px) + 14px) 16px 22px;position:relative;overflow:hidden}
+header .row{max-width:var(--w);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .logo{height:42px;width:auto;display:block}
 .sheen{position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.18) 48%,transparent 60%);transform:translateX(120%);pointer-events:none}
 .loaded .sheen{animation:sheen 1.6s .2s ease-out 1 both}
@@ -51,9 +53,9 @@ header .row{max-width:680px;margin:0 auto;display:flex;align-items:center;justif
 .who{display:flex;align-items:center;gap:8px;border:1px solid rgba(238,241,240,.22);background:rgba(238,241,240,.06);border-radius:999px;padding:5px 6px 5px 12px;color:var(--brand-ink);font-size:13px}
 .who b{font-weight:600}
 .who i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(238,241,240,.14);font-size:13px}
-.sub{max-width:680px;margin:6px auto 0;font-size:13px;opacity:.78}
+.sub{max-width:var(--w);margin:6px auto 0;font-size:13px;opacity:.78}
 
-main{max-width:680px;margin:0 auto;padding:16px 16px calc(var(--nav) + 120px)}
+main{max-width:var(--w);margin:0 auto;padding:16px 16px calc(var(--nav) + 120px)}
 h2{font-size:19px;font-weight:800;margin:6px 0 2px;letter-spacing:-.2px}
 h3{font-size:15px;font-weight:600;margin:0}
 .lead{color:var(--muted);font-size:13.5px;margin:0 0 14px}
@@ -115,7 +117,7 @@ textarea.in{min-height:84px;resize:vertical;line-height:1.8}
 .sku{direction:ltr;text-align:left;font-weight:800;letter-spacing:.4px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
 .sku small{color:var(--muted);font-weight:600}
 .dock{position:fixed;inset:auto 0 calc(var(--nav) + env(safe-area-inset-bottom));z-index:20;padding:10px 16px}
-.dock .in-dock{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:20px;padding:10px 10px 10px 14px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.dock .in-dock{max-width:var(--w);margin:0 auto;display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:20px;padding:10px 10px 10px 14px;box-shadow:var(--shadow);border:1px solid var(--line)}
 .dock .meta{flex:1;min-width:0}
 .dock .meta .hint{display:block;line-height:1.4}
 
@@ -123,7 +125,7 @@ textarea.in{min-height:84px;resize:vertical;line-height:1.8}
 nav.tabs{position:fixed;inset:auto 0 0;z-index:30;background:var(--glass);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
 @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html:not(.lite) nav.tabs{backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}}
 html.lite nav.tabs{background:var(--surface)}
-nav.tabs .in-nav{max-width:680px;margin:0 auto;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;height:var(--nav)}
+nav.tabs .in-nav{max-width:var(--w);margin:0 auto;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;height:var(--nav)}
 nav.tabs button{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:600}
 nav.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav.tabs button[aria-current=page]{color:var(--ink)}
@@ -193,6 +195,10 @@ details.pr[open] summary::after{content:'–'}
 .skel{height:180px;border-radius:var(--r);background:linear-gradient(90deg,var(--raised),var(--soft),var(--raised));background-size:200% 100%;animation:sk 1.2s infinite}
 @keyframes sk{to{background-position:-200% 0}}
 .login{max-width:380px;margin:20px auto}
+.fs{border:1px solid rgba(238,241,240,.22);background:rgba(238,241,240,.06);color:var(--brand-ink);border-radius:999px;width:36px;height:36px;display:grid;place-items:center;padding:0}
+.fs svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.hrt{display:flex;align-items:center;gap:8px}
+@media (min-width:1000px){.cform{display:grid;grid-template-columns:minmax(320px,440px) 1fr;gap:0 24px;align-items:start}.cform>.g-photo{grid-row:span 30;position:sticky;top:16px}.cform>.group{margin-top:0;margin-bottom:14px}.cform{margin-top:14px}.g-photo .drop{min-height:360px}}
 @media (min-width:720px){main{padding-top:24px}.plist{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}}
 </style>
 </head>
@@ -209,7 +215,7 @@ details.pr[open] summary::after{content:'–'}
   <div class="sheen"></div>
   <div class="row">
     <svg class="logo" viewBox="0 0 1004.83 388.44" role="img" aria-label="نقرینو"><use href="#logo"/></svg>
-    <button class="who hidden" id="who" data-a="account"></button>
+    <div class="hrt"><button class="fs hidden" id="fs" data-a="fullscreen" aria-label="تمام‌صفحه"></button><button class="who hidden" id="who" data-a="account"></button></div>
   </div>
   <div class="sub" id="sub">استودیو عکاسی محصول</div>
 </header>
@@ -245,6 +251,24 @@ function applyTheme() {
 if ((navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || matchMedia('(prefers-reduced-transparency: reduce)').matches) document.documentElement.classList.add('lite');
 applyTheme();
 if (tg) { try { tg.ready(); tg.expand(); tg.onEvent('themeChanged', applyTheme); } catch (e) {} }
+// ---- fullscreen (Telegram 8.0+): automatic on desktop, toggle button everywhere ----
+const DESKTOP = tg && /^(tdesktop|macos|web|weba|webk|unigram)$/.test(tg.platform || '');
+const fsOK = () => !!(tg && tg.requestFullscreen && tg.isVersionAtLeast && tg.isVersionAtLeast('8.0'));
+const FS_ICON = { on: '<svg viewBox="0 0 24 24"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>', off: '<svg viewBox="0 0 24 24"><path d="M4 9h5V4M20 9h-5V4M4 15h5v5M20 15h-5v5"/></svg>' };
+function fsButton() { const b = $('#fs'); if (!b) return; b.classList.toggle('hidden', !fsOK()); const on = !!(tg && tg.isFullscreen); b.innerHTML = on ? FS_ICON.off : FS_ICON.on; b.setAttribute('aria-label', on ? 'خروج از تمام‌صفحه' : 'تمام‌صفحه'); }
+function toggleFullscreen() {
+  if (!fsOK()) return;
+  try { if (tg.isFullscreen) { tg.exitFullscreen(); store.set('fs', 'off'); } else { tg.requestFullscreen(); store.set('fs', 'on'); } } catch (e) {}
+}
+if (fsOK()) {
+  try {
+    tg.onEvent('fullscreenChanged', fsButton);
+    tg.onEvent('fullscreenFailed', e => { fsButton(); if (e && e.error === 'UNSUPPORTED') toast('این نسخه تلگرام تمام‌صفحه را پشتیبانی نمی‌کند.'); });
+    const pref = store.get('fs');
+    if (pref === 'on' || (DESKTOP && pref !== 'off')) tg.requestFullscreen();
+  } catch (e) {}
+}
+document.addEventListener('DOMContentLoaded', fsButton); setTimeout(fsButton, 0);
 requestAnimationFrame(() => document.body.classList.add('loaded'));
 
 // ---- server ----
@@ -352,13 +376,14 @@ function vCreate() {
   <h2>ساخت عکس محصول</h2>
   <p class="lead">عکس محصول را بدهید؛ SKU خودکار ساخته می‌شود و عکس صنعتی یا مدلینگ تحویل می‌گیرید.</p>
   ${c.mock ? `<div class="mock">سرویس تصویر روی حالت تست است؛ همان عکس خودتان برمی‌گردد.</div>` : ''}
-  <div class="group">
+  <div class="cform">
+  <div class="group g-photo">
     <div class="drop">${f.url ? `<img src="${f.url}" alt=""><button class="x" data-a="clearPhoto">عوض کردن عکس</button>` : `<div class="ph"><strong>عکس محصول</strong>از گالری یا دوربین انتخاب کنید</div>`}
       <input type="file" accept="image/*" data-a="photo" aria-label="عکس محصول"></div>
   </div>
   <div class="group">
     <div class="gh"><h3>تأمین‌کننده</h3><span class="hint">برای دفعه بعد به خاطر سپرده می‌شود</span></div>
-    <div class="chips scroll">${c.options.supplier.map(o => `<button class="chip" data-a="set" data-k="supplier" data-v="${esc(o.code)}" aria-pressed="${f.supplier === o.code}">${esc(o.name)} <small>${esc(o.code)}</small></button>`).join('')}</div>
+    <div class="chips scroll">${c.options.supplier.map(o => `<button class="chip" data-a="set" data-k="supplier" data-v="${esc(o.code)}" aria-pressed="${f.supplier === o.code}" dir="ltr">${o.name && o.name !== o.code ? `${esc(o.name)} <small>${esc(o.code)}</small>` : esc(o.code)}</button>`).join('')}</div>
   </div>
   <div class="group">
     <div class="gh"><h3>دسته‌بندی</h3>${anyOpen ? '' : `<span class="hint">${P('library') ? 'اول در کتابخانه رفرنس اضافه کنید' : 'فعلاً در دسترس نیست'}</span>`}</div>
@@ -381,7 +406,8 @@ function vCreate() {
     <div class="grid2">${(cat.dims || []).map((d, i) => `<label class="f"><span>${esc(d.n)}</span><div class="unit"><input class="in" inputmode="decimal" data-f="dim" data-i="${i}" value="${esc(f.dims[d.n] || '')}"><em>${esc(d.u)}</em></div></label>`).join('')}
     <label class="f"><span>وزن</span><div class="unit"><input class="in" inputmode="decimal" data-f="weight" value="${esc(f.weight)}"><em>گرم</em></div></label></div></div>` : ''}
   <div class="group"><label class="f" style="margin:0"><span>توضیح (اختیاری)</span><textarea class="in" data-f="note" placeholder="مثلا: قفل زنجیر باز باشد">${esc(f.note)}</textarea></label></div>
-  <div class="quota"><span>امروز ${qline('day')}</span><span>این ماه ${qline('month')}</span></div>`;
+  <div class="quota"><span>امروز ${qline('day')}</span><span>این ماه ${qline('month')}</span></div>
+  </div>`;
 }
 function skuPreview() {
   const f = S.f, cat = curCat();
@@ -415,7 +441,7 @@ function vProducts() {
 function productSheet(p) {
   const sp = p.specs;
   // [label, shown value, value to copy, left-to-right?]
-  const specRows = sp ? [['SKU', p.sku, p.sku, 1], ['دسته', p.category, p.category], ['تأمین‌کننده', `${sp.supplier_fa} (${sp.supplier})`, sp.supplier_fa],
+  const specRows = sp ? [['SKU', p.sku, p.sku, 1], ['دسته', p.category, p.category], sp.supplier_fa && sp.supplier_fa !== sp.supplier ? ['تأمین‌کننده', `${sp.supplier_fa} (${sp.supplier})`, sp.supplier_fa] : ['تأمین‌کننده', sp.supplier, sp.supplier, 1],
     ['آبکاری', `${sp.plating_fa} (${sp.plating})`, sp.plating_fa]]
     .concat(sp.gem ? [['رنگ نگین', `${sp.gem_fa} (${sp.gem})`, sp.gem_fa]] : [])
     .concat((sp.dims || []).filter(d => String(d.v || '').trim()).map(d => [d.n, `${d.v} ${d.u || ''}`, d.v, 1]))
@@ -593,6 +619,7 @@ const val = id => { const e = $('#' + id); return e ? e.value.trim() : ''; };
 const A = {
   tab(el) { S.tab = el.dataset.v; haptic(); window.scrollTo(0, 0); render(); },
   account() { openSheet(accountSheet()); },
+  fullscreen() { haptic(); toggleFullscreen(); },
   theme(el) { store.set('theme', el.dataset.v); applyTheme(); $('#sheetBody').innerHTML = accountSheet(); },
   async logout(el) { if (!await ask('از حساب خارج می‌شوید؟')) return; await busy(el, async () => { await api('logout'); closeSheet(); S.cfg = null; render(); }); },
   async login(el) {
