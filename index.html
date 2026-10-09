@@ -18,13 +18,14 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:Vazirmatn,system-ui,sans-serif;font-size:15px}
-button,textarea,input{font:inherit;color:inherit}
+button,textarea,input,select{font:inherit;color:inherit}
 .hero{background:var(--green);color:var(--cream);padding:18px 16px 54px;position:relative}
 .hero h1{margin:0;font-size:20px;font-weight:800}
-.hero p{margin:4px 0 0;font-size:13px;opacity:.75}
+.hero p{margin:4px 0 0;font-size:13px;opacity:.8}
 .hero svg{position:absolute;left:18px;top:16px;width:42px;height:42px}
-.tabs{display:flex;gap:6px;margin:-38px 16px 0;position:relative;background:var(--card);padding:5px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.08)}
-.tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:10px;font-weight:700;cursor:pointer;color:var(--hint)}
+.hero .who{position:absolute;left:68px;top:24px;font-size:12px;background:rgba(225,207,180,.15);border:0;color:var(--cream);border-radius:999px;padding:4px 10px;cursor:pointer}
+.tabs{display:flex;gap:4px;margin:-38px 12px 0;position:relative;background:var(--card);padding:5px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.08);overflow-x:auto}
+.tabs button{flex:1;min-width:max-content;border:0;background:transparent;padding:10px 10px;border-radius:10px;font-weight:700;cursor:pointer;color:var(--hint);font-size:14px}
 .tabs button.on{background:var(--green);color:var(--cream)}
 main{padding:14px 16px 110px}
 .card{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:12px;border:1px solid var(--line)}
@@ -39,21 +40,25 @@ main{padding:14px 16px 110px}
 .chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 14px;cursor:pointer;font-size:14px}
 .chip.on{background:var(--green);color:var(--cream);border-color:var(--green)}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--line);padding:4px;border-radius:12px}
+.seg.two{grid-template-columns:repeat(2,1fr)}
 .seg button{border:0;background:transparent;padding:10px 4px;border-radius:9px;cursor:pointer;font-weight:600}
 .seg button.on{background:var(--card);color:var(--copper);box-shadow:0 1px 4px rgba(0,0,0,.1)}
 .chars{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .char{border:2px solid transparent;background:transparent;padding:4px 0;border-radius:14px;cursor:pointer;text-align:center}
-.char .av{width:52px;height:52px;margin:0 auto;border-radius:50%;background:color-mix(in srgb,var(--copper) 18%,transparent);color:var(--copper);display:grid;place-items:center;font-size:20px;font-weight:800}
+.av{width:52px;height:52px;margin:0 auto;border-radius:50%;background:color-mix(in srgb,var(--copper) 18%,transparent);color:var(--copper);display:grid;place-items:center;font-size:20px;font-weight:800}
 .char span{display:block;font-size:12px;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
 .char.on{border-color:var(--copper)}
-textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:12px;background:transparent;padding:10px}
+textarea,input[type=text],input[type=password]{width:100%;border:1px solid var(--line);border-radius:12px;background:transparent;padding:10px}
 textarea{min-height:64px;resize:vertical}
+textarea.code{min-height:180px;font-size:12px;direction:ltr;text-align:left;font-family:ui-monospace,Menlo,monospace}
 .warn{font-size:12px;color:var(--copper);margin-top:8px}
+.banner{background:color-mix(in srgb,var(--copper) 14%,var(--card));border:1px solid color-mix(in srgb,var(--copper) 40%,transparent);color:var(--text);border-radius:12px;padding:10px 12px;font-size:13px;margin-bottom:12px}
 .hint{font-size:12px;color:var(--hint);line-height:1.8}
 .fb{position:fixed;bottom:0;left:0;right:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg)}
 .btn{width:100%;border:0;border-radius:14px;padding:14px;background:var(--copper);color:#fff;font-weight:800;font-size:16px;cursor:pointer}
 .btn:disabled{opacity:.45}
 .btn.ghost{background:transparent;color:var(--copper);border:1px solid var(--copper);font-size:14px;padding:11px}
+.btn.danger{background:transparent;color:var(--err);border:1px solid var(--err);font-size:14px;padding:11px}
 .row{display:flex;align-items:center;gap:8px;padding:10px 0;border-top:1px solid var(--line)}
 .row:first-of-type{border-top:0}
 .row .t{flex:1;min-width:0}
@@ -63,6 +68,10 @@ textarea{min-height:64px;resize:vertical}
 .mini.add{color:var(--copper);border-color:color-mix(in srgb,var(--copper) 50%,transparent);font-weight:700}
 .count{display:inline-block;min-width:22px;text-align:center;border-radius:8px;padding:0 6px;font-size:12px;background:var(--line);margin-inline-start:6px}
 .count.zero{background:color-mix(in srgb,var(--copper) 18%,transparent);color:var(--copper)}
+.tag{display:inline-block;font-size:11px;border-radius:6px;padding:1px 7px;margin-inline-start:6px;background:var(--line)}
+.tag.admin{background:var(--green);color:var(--cream)}
+.tag.off{background:color-mix(in srgb,var(--err) 18%,transparent);color:var(--err)}
+.tag.ok{background:color-mix(in srgb,var(--ok) 18%,transparent);color:var(--ok)}
 .done{text-align:center;padding:26px 14px}
 .done .big{font-size:42px}
 .done h2{margin:8px 0 4px;font-size:18px}
@@ -70,26 +79,56 @@ textarea{min-height:64px;resize:vertical}
 .toast.show{opacity:1}
 .hidden{display:none!important}
 .sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;display:flex;align-items:flex-end}
-.sheet .panel{background:var(--card);width:100%;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto}
+.sheet .panel{background:var(--card);width:100%;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}
 .sheet h3{margin:0 0 12px;font-size:17px}
 .field{margin-bottom:12px}
 .field label{display:block;font-size:13px;color:var(--hint);margin-bottom:6px}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.switch input{width:44px;height:26px;accent-color:var(--copper)}
+details.card summary{cursor:pointer;font-weight:700;list-style:none}
+details.card summary::-webkit-details-marker{display:none}
+details.card summary small{display:block;color:var(--hint);font-weight:400;font-size:12px;margin-top:2px}
+.set-row{padding:10px 0;border-top:1px solid var(--line)}
+.set-row:first-of-type{border-top:0}
+.set-row .h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.set-row .h b{font-size:14px}
+.set-row .h small{color:var(--hint);font-size:11px}
+.set-row .in{display:flex;gap:8px}
+.set-row .in input{direction:ltr;text-align:left}
+.login{max-width:420px;margin:0 auto}
 </style>
 </head>
 <body>
 <header class="hero">
   <svg viewBox="0 0 48 48" fill="none" stroke="#e1cfb4" stroke-width="2"><circle cx="19" cy="27" r="11"/><circle cx="29" cy="27" r="11"/><path d="M24 4l5 6-5 5-5-5z" fill="#e1cfb4" stroke="none"/></svg>
+  <button class="who hidden" id="who"></button>
   <h1>استودیو عکاسی نقرینو</h1>
   <p id="hello">عکس محصول بده، عکس صنعتی و مدلینگ بگیر</p>
 </header>
 
-<nav class="tabs">
-  <button id="tab-new" class="on">ساخت عکس</button>
-  <button id="tab-lib">کتابخانه</button>
+<nav class="tabs hidden" id="tabs">
+  <button data-tab="new" class="on">ساخت عکس</button>
+  <button data-tab="lib">کتابخانه</button>
+  <button data-tab="users">کاربران</button>
+  <button data-tab="settings">تنظیمات</button>
 </nav>
 
 <main>
-  <section id="view-new">
+  <!-- LOGIN -->
+  <section id="view-login" class="hidden">
+    <div class="card login">
+      <div class="done" style="padding:10px 0 4px"><div class="big">🔐</div><h2>ورود به استودیو</h2>
+        <p class="hint">نام کاربری و رمزی که مدیر به شما داده را وارد کنید. بعد از اولین ورود، این حساب تلگرام شما به خاطر سپرده می‌شود.</p></div>
+      <div class="field"><label>نام کاربری</label><input type="text" id="lg-user" autocomplete="username" dir="ltr" autocapitalize="off"></div>
+      <div class="field"><label>رمز عبور</label><input type="password" id="lg-pass" autocomplete="current-password" dir="ltr"></div>
+      <button class="btn" id="lg-btn">ورود</button>
+      <p class="warn hidden" id="lg-err"></p>
+    </div>
+  </section>
+
+  <!-- CREATE -->
+  <section id="view-new" class="hidden">
+    <div class="banner hidden" id="mock-banner">🧪 حالت تست فعال است: به‌جای عکس هوش مصنوعی، همان عکس خودتان برمی‌گردد.</div>
     <div id="form">
       <div class="card">
         <div class="label">۱. عکس محصول <span id="pick-count"></span></div>
@@ -122,12 +161,13 @@ textarea{min-height:64px;resize:vertical}
     <div class="card done hidden" id="done">
       <div class="big">✨</div>
       <h2 id="done-title">در حال ساخت</h2>
-      <p class="hint">هر عکس معمولاً ۲۰ تا ۶۰ ثانیه طول می‌کشد و نتیجه به‌صورت فایل با کیفیت کامل در چت ربات ارسال می‌شود. زیر هر نتیجه، دکمه «دوباره بساز» هست.</p>
+      <p class="hint">هر عکس معمولاً ۲۰ تا ۶۰ ثانیه طول می‌کشد و نتیجه به‌صورت فایل با کیفیت کامل در چت ربات ارسال می‌شود. زیر هر نتیجه دکمه «دوباره بساز» هست.</p>
       <button class="btn" id="go-chat" style="margin-top:10px">رفتن به چت ربات</button>
       <button class="btn ghost" id="again" style="margin-top:8px">ساخت عکس دیگر</button>
     </div>
   </section>
 
+  <!-- LIBRARY -->
   <section id="view-lib" class="hidden">
     <div class="card">
       <div class="label">کاراکترهای برند <button class="mini add" id="new-char">+ کاراکتر جدید</button></div>
@@ -136,16 +176,36 @@ textarea{min-height:64px;resize:vertical}
     </div>
     <div class="card">
       <div class="label">رفرنس‌های سبک عکاسی</div>
-      <p class="hint" style="margin:0 0 6px">صنعتی: نور، زاویه و چیدمان. مدلینگ: فقط ژست، زاویه و نور (چهره مدل رفرنس استفاده نمی‌شود). در هر ساخت، حداکثر ۳ رفرنس به‌صورت رندوم انتخاب می‌شود.</p>
+      <p class="hint" style="margin:0 0 6px">صنعتی: نور، زاویه و چیدمان. مدلینگ: فقط ژست، زاویه و نور (چهره مدل رفرنس استفاده نمی‌شود). در هر ساخت حداکثر چند رفرنس به‌صورت رندوم انتخاب می‌شود.</p>
       <div id="ref-list"></div>
     </div>
-    <p class="hint" style="text-align:center">هر فایلی که اینجا اضافه کنید، به‌عنوان سابقه در چت ربات هم ارسال می‌شود.</p>
+  </section>
+
+  <!-- USERS (admin) -->
+  <section id="view-users" class="hidden">
+    <div class="card">
+      <div class="label">کاربران <button class="mini add" id="new-user">+ کاربر جدید</button></div>
+      <div id="user-list"></div>
+      <p class="hint" style="margin:8px 0 0">برای هر کارمند نام کاربری و رمز بسازید و به او بدهید. اولین بار که وارد شود، حساب تلگرامش به این کاربر وصل می‌شود. با «غیرفعال» یا «قطع اتصال» دسترسی‌اش فوراً قطع می‌شود.</p>
+    </div>
+  </section>
+
+  <!-- SETTINGS (admin) -->
+  <section id="view-settings" class="hidden">
+    <div class="card">
+      <div class="label">سرویس هوش مصنوعی و خروجی</div>
+      <div id="settings-list"></div>
+    </div>
+    <div class="label" style="padding:0 4px">پرامپت‌ها (سیستم پرامپت مدل تصویر)</div>
+    <p class="hint" style="margin:0 4px 10px">این متن‌ها دقیقاً همان چیزی است که به مدل تصویری فرستاده می‌شود. <code>{{FIDELITY}}</code>، <code>{{BG_COLOR}}</code>، <code>{{CATEGORY}}</code> و <code>{{NOTE}}</code> خودکار جایگزین می‌شوند.</p>
+    <div id="prompt-list"></div>
   </section>
 </main>
 
 <div class="fb hidden" id="fb"><button class="btn" id="fb-btn" disabled>ساخت عکس</button></div>
 <input type="file" id="lib-file" accept="image/*" multiple hidden>
 
+<!-- character sheet -->
 <div class="sheet hidden" id="char-sheet">
   <div class="panel">
     <h3 id="cs-title">کاراکتر جدید</h3>
@@ -159,6 +219,26 @@ textarea{min-height:64px;resize:vertical}
     <button class="btn ghost" id="cs-cancel" style="margin-top:8px">انصراف</button>
   </div>
 </div>
+
+<!-- user sheet -->
+<div class="sheet hidden" id="user-sheet">
+  <div class="panel">
+    <h3 id="us-title">کاربر جدید</h3>
+    <div class="field"><label>نام کاربری (انگلیسی)</label><input type="text" id="us-username" dir="ltr" maxlength="32" autocapitalize="off" placeholder="sara.photo"></div>
+    <div class="field"><label>نام نمایشی</label><input type="text" id="us-name" maxlength="40" placeholder="سارا - عکاس"></div>
+    <div class="field"><label id="us-pass-label">رمز عبور (حداقل ۶ کاراکتر)</label>
+      <div style="display:flex;gap:8px"><input type="text" id="us-pass" dir="ltr" maxlength="64" autocomplete="off"><button class="mini" id="us-gen" type="button">🎲 بساز</button></div></div>
+    <div class="field"><label>نقش</label>
+      <div class="seg two" id="us-role"><button data-r="staff" class="on">کارمند</button><button data-r="admin">مدیر</button></div>
+      <p class="hint" style="margin:6px 0 0">مدیر به همه بخش‌ها (کاربران، تنظیمات و پرامپت‌ها) دسترسی دارد.</p></div>
+    <label class="switch"><span>اجازه تغییر کتابخانه (رفرنس و کاراکتر)</span><input type="checkbox" id="us-lib"></label>
+    <label class="switch"><span>حساب فعال باشد</span><input type="checkbox" id="us-active" checked></label>
+    <label class="switch" id="us-unlink-row"><span>قطع اتصال از تلگرام فعلی (باید دوباره وارد شود)</span><input type="checkbox" id="us-unlink"></label>
+    <button class="btn" id="us-save" style="margin-top:10px">ذخیره</button>
+    <button class="btn danger hidden" id="us-del" style="margin-top:8px">حذف کاربر</button>
+    <button class="btn ghost" id="us-cancel" style="margin-top:8px">انصراف</button>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -166,28 +246,30 @@ const tg = window.Telegram && window.Telegram.WebApp;
 const inTelegram = !!(tg && tg.initData);
 const $ = s => document.querySelector(s);
 const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const qs = new URLSearchParams(location.search);
 
-// API address comes from the bot's menu button (?api=...). Fallback: paste your webhook URL here.
-const FALLBACK_API = '';
-const API = new URLSearchParams(location.search).get('api') || (() => { try { return localStorage.getItem('api'); } catch { return null; } })() || FALLBACK_API;
-try { if (API) localStorage.setItem('api', API); } catch {}
+// API address comes from the bot's buttons (?api=...).
+const FALLBACK_API = 'https://62417.sevenhost.cloud/webhook/nqs-api';
+const API = qs.get('api') || (() => { try { return localStorage.getItem('api'); } catch (e) { return null; } })() || FALLBACK_API;
+try { if (API) localStorage.setItem('api', API); } catch (e) {}
 
-const S = { cfg: null, files: [], cat: null, mode: 'industrial', char: 'random', busy: false, tab: 'new', csFiles: [], csEdit: null, libTarget: null };
+const S = { cfg: null, files: [], cat: null, mode: 'industrial', char: 'random', busy: false, tab: 'new', csFiles: [], csEdit: null, libTarget: null, usEdit: null, usRole: 'staff' };
 
 if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor && tg.setHeaderColor('#1b3f33'); }
 
+class NeedLogin extends Error {}
 async function api(action, fields = {}, files = []) {
-  if (!API) throw new Error('آدرس سرور مشخص نیست. اپ را از دکمه «استودیو» داخل ربات باز کنید.');
   const fd = new FormData();
   fd.append('initData', (tg && tg.initData) || '');
   fd.append('action', action);
-  for (const [k, v] of Object.entries(fields)) if (v !== undefined && v !== null) fd.append(k, v);
+  for (const [k, v] of Object.entries(fields)) if (v !== undefined && v !== null) fd.append(k, typeof v === 'boolean' ? String(v) : v);
   files.forEach((f, i) => fd.append('file' + i, f, f.name || `photo${i}.jpg`));
   let res;
   try { res = await fetch(API, { method: 'POST', body: fd }); }
-  catch { throw new Error('اتصال به سرور برقرار نشد. اینترنت/VPN را چک کنید.'); }
+  catch (e) { throw new Error('اتصال به سرور برقرار نشد. اینترنت/VPN را چک کنید.'); }
   const data = await res.json().catch(() => ({}));
+  if (data && data.needLogin && action !== 'login') { showLogin(data.error); throw new NeedLogin(data.error || 'ورود لازم است'); }
   if (!res.ok || data.ok === false) throw new Error(data.error || data.message || `خطای سرور (${res.status})`);
   return data;
 }
@@ -198,8 +280,8 @@ function toast(msg, ms = 2800) {
 const haptic = (k = 'light') => tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(k);
 const confirmBox = msg => new Promise(r => (tg && tg.showConfirm && inTelegram) ? tg.showConfirm(msg, r) : r(confirm(msg)));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const errMsg = e => { if (!(e instanceof NeedLogin)) toast(e.message, 5000); };
 
-// Downscale on the phone before upload (keeps detail, keeps request small).
 async function prepare(file, max = 2560) {
   try {
     const bmp = await createImageBitmap(file);
@@ -210,8 +292,42 @@ async function prepare(file, max = 2560) {
     c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
     const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.93));
     return new File([blob], (file.name || 'photo').replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });
-  } catch { return file; }
+  } catch (e) { return file; }
 }
+
+// ---------------- login ----------------
+function showLogin(msg) {
+  S.cfg = null;
+  $('#tabs').classList.add('hidden'); $('#who').classList.add('hidden');
+  document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+  $('#view-login').classList.remove('hidden');
+  $('#lg-err').textContent = msg && !/وارد شوید/.test(msg) ? msg : '';
+  $('#lg-err').classList.toggle('hidden', !$('#lg-err').textContent);
+  tg && tg.MainButton.hide(); $('#fb').classList.add('hidden');
+}
+$('#lg-btn').onclick = async () => {
+  const username = $('#lg-user').value.trim(), password = $('#lg-pass').value;
+  if (!username || !password) return toast('نام کاربری و رمز را وارد کنید');
+  const b = $('#lg-btn'); b.disabled = true; b.textContent = '…';
+  try {
+    const cfg = await api('login', { username, password });
+    $('#lg-pass').value = '';
+    haptic('medium'); toast('خوش آمدید 👋');
+    start(cfg);
+  } catch (e) {
+    $('#lg-err').textContent = e.message; $('#lg-err').classList.remove('hidden');
+    tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('error');
+  }
+  b.disabled = false; b.textContent = 'ورود';
+};
+$('#lg-pass').addEventListener('keydown', e => { if (e.key === 'Enter') $('#lg-btn').click(); });
+$('#who').onclick = async () => {
+  const me = S.cfg && S.cfg.me; if (!me) return;
+  if (me.owner) return toast('شما مدیر اصلی هستید.');
+  if (!(await confirmBox('از حساب خارج شوید؟'))) return;
+  try { await api('logout'); } catch (e) {}
+  showLogin();
+};
 
 // ---------------- create ----------------
 function renderCats() {
@@ -226,7 +342,7 @@ function renderCats() {
   const c = S.cfg.categories.find(x => x.id === S.cat), msgs = [];
   if (c && S.mode !== 'modeling' && !c.ind) msgs.push('برای این دسته رفرنس صنعتی ندارید؛ سبک پیش‌فرض استفاده می‌شود.');
   if (c && S.mode !== 'industrial' && !c.mod) msgs.push('رفرنس مدلینگ ندارید؛ ژست پیش‌فرض استفاده می‌شود.');
-  if (S.mode !== 'industrial' && !usableChars().length) msgs.push('هنوز کاراکتری ندارید؛ از تب «کتابخانه» اضافه کنید.');
+  if (S.mode !== 'industrial' && !usableChars().length) msgs.push('هنوز کاراکتری با عکس شیت ندارید.');
   $('#cat-warn').textContent = msgs.join(' '); $('#cat-warn').classList.toggle('hidden', !msgs.length);
 }
 const usableChars = () => S.cfg.characters.filter(c => c.sheets > 0);
@@ -262,7 +378,7 @@ function renderThumbs() {
   $('#pick-count').textContent = S.files.length ? `${fa(S.files.length)} عکس` : '';
 }
 
-const showingForm = () => S.tab === 'new' && !$('#form').classList.contains('hidden');
+const showingForm = () => S.cfg && S.tab === 'new' && !$('#form').classList.contains('hidden');
 function buttonState() {
   if (S.busy) return ['در حال ارسال…', false];
   if (!S.files.length) return ['اول عکس محصول را انتخاب کنید', false];
@@ -279,7 +395,6 @@ function updateButton() {
     $('#fb-btn').textContent = text; $('#fb-btn').disabled = !ok;
   }
 }
-
 async function submit() {
   if (!buttonState()[1] || S.busy) return;
   S.busy = true; updateButton(); tg && tg.MainButton.showProgress && tg.MainButton.showProgress();
@@ -290,7 +405,7 @@ async function submit() {
       const img = await prepare(S.files[i].file);
       const r = await api('create', { category: S.cat, mode: S.mode, character: S.char, note: $('#note').value.trim() }, [img]);
       sent += r.count || 1;
-    } catch (e) { failed.push(S.files[i]); toast(e.message, 5000); await sleep(1500); }
+    } catch (e) { failed.push(S.files[i]); errMsg(e); if (e instanceof NeedLogin) break; await sleep(1500); }
   }
   S.files.forEach(f => { if (!failed.includes(f)) URL.revokeObjectURL(f.url); });
   S.files = failed; renderThumbs();
@@ -342,15 +457,14 @@ function renderLibrary() {
   }
 }
 async function run(fn, okMsg) {
-  try { applyConfig(await fn()); haptic('medium'); if (okMsg) toast(okMsg); }
-  catch (e) { toast(e.message, 5000); }
+  try { applyConfig(await fn()); haptic('medium'); if (okMsg) toast(okMsg); return true; }
+  catch (e) { errMsg(e); return false; }
 }
 function applyConfig(cfg) {
-  if (cfg.categories) S.cfg.categories = cfg.categories;
-  if (cfg.characters) S.cfg.characters = cfg.characters;
-  renderLibrary(); renderCats(); renderChars();
+  if (!cfg) return;
+  for (const k of ['categories', 'characters', 'users', 'settings', 'prompts', 'me', 'mock']) if (cfg[k] !== undefined) S.cfg[k] = cfg[k];
+  renderAll();
 }
-
 function pickLib(target, label) { S.libTarget = { target, label }; $('#lib-file').click(); }
 $('#lib-file').onchange = async e => {
   const files = [...e.target.files]; e.target.value = '';
@@ -363,36 +477,29 @@ async function uploadLib(target, files, label, extra = {}) {
     for (let i = 0; i < files.length; i += 3) {
       toast(`آپلود ${label}: ${fa(Math.min(i + 3, files.length))} از ${fa(files.length)}…`, 60000);
       const chunk = await Promise.all(files.slice(i, i + 3).map(f => prepare(f, 2048)));
+      const known = new Set((S.cfg.characters || []).map(c => c.id));
       const r = await api('lib_add', { ...target, ...(i === 0 ? extra : {}) }, chunk);
       added += r.added || 0;
-      if (target.type === 'char' && !target.charId) target = { type: 'char', charId: newestCharId(r) };
+      if (target.type === 'char' && !target.charId) {
+        const fresh = (r.characters || []).find(c => !known.has(c.id));
+        target = { type: 'char', charId: fresh ? fresh.id : '' };
+      }
       applyConfig(r);
       if (i + 3 < files.length) await sleep(1500);
     }
     toast(`✅ ${fa(added)} عکس اضافه شد`); haptic('medium');
     return true;
-  } catch (e) { toast(e.message, 5000); return false; }
+  } catch (e) { errMsg(e); return false; }
 }
-function newestCharId(r) {
-  const known = new Set((S.cfg.characters || []).map(c => c.id));
-  const fresh = (r.characters || []).find(c => !known.has(c.id));
-  return fresh ? fresh.id : (r.characters || []).slice(-1)[0].id;
-}
-
-// character sheet (new / edit)
 function openCharSheet(c) {
   S.csEdit = c || null; S.csFiles = [];
   $('#cs-title').textContent = c ? `ویرایش ${c.name}` : 'کاراکتر جدید';
   $('#cs-name').value = c ? c.name : ''; $('#cs-desc').value = c ? c.desc : '';
   $('#cs-files-field').classList.toggle('hidden', !!c);
-  renderCsThumbs();
-  $('#char-sheet').classList.remove('hidden'); tg && tg.MainButton.hide();
-  tg && tg.BackButton.show();
+  renderCsThumbs(); openSheet('#char-sheet');
 }
-function closeCharSheet() { $('#char-sheet').classList.add('hidden'); tg && tg.BackButton.hide(); updateButton(); }
 $('#new-char').onclick = () => openCharSheet(null);
-$('#cs-cancel').onclick = closeCharSheet;
-tg && tg.BackButton.onClick(closeCharSheet);
+$('#cs-cancel').onclick = () => closeSheets();
 $('#cs-drop').onclick = () => { const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.multiple = true;
   inp.onchange = () => { for (const f of inp.files) S.csFiles.push({ file: f, url: URL.createObjectURL(f) }); renderCsThumbs(); }; inp.click(); };
 function renderCsThumbs() {
@@ -409,36 +516,153 @@ $('#cs-save').onclick = async () => {
   if (!name) return toast('نام را بنویسید');
   const btn = $('#cs-save'); btn.disabled = true;
   if (S.csEdit) {
-    await run(() => api('char_update', { charId: S.csEdit.id, charName: name, charDesc: desc }), 'ذخیره شد');
-    btn.disabled = false; return closeCharSheet();
+    const ok = await run(() => api('char_update', { charId: S.csEdit.id, charName: name, charDesc: desc }), 'ذخیره شد');
+    btn.disabled = false; if (ok) closeSheets(); return;
   }
   if (!S.csFiles.length) { btn.disabled = false; return toast('حداقل یک عکس شیت انتخاب کنید'); }
   const ok = await uploadLib({ type: 'char' }, S.csFiles.map(f => f.file), name, { charName: name, charDesc: desc });
   btn.disabled = false;
-  if (ok) closeCharSheet();
+  if (ok) closeSheets();
 };
 
-// ---------------- tabs & boot ----------------
+// ---------------- users (admin) ----------------
+function renderUsers() {
+  const box = $('#user-list'); box.innerHTML = '';
+  const users = S.cfg.users || [];
+  if (!users.length) box.innerHTML = '<p class="hint" style="margin:0">هنوز کاربری نساخته‌اید.</p>';
+  for (const u of users) {
+    const row = document.createElement('div'); row.className = 'row';
+    row.innerHTML = `<div class="av" style="width:40px;height:40px;font-size:16px">${esc((u.display_name || u.username)[0])}</div>
+      <div class="t"><b>${esc(u.display_name || u.username)}${u.role === 'admin' ? '<span class="tag admin">مدیر</span>' : ''}${u.active ? '' : '<span class="tag off">غیرفعال</span>'}</b>
+      <small dir="ltr" style="display:block;text-align:right">${esc(u.username)}</small>
+      <small>${u.can_library || u.role === 'admin' ? '📚 کتابخانه ✅' : '📚 کتابخانه ❌'} · ${u.linked ? '<span class="tag ok">وصل به تلگرام</span>' : 'هنوز وارد نشده'}</small></div>
+      <button class="mini">✏️ ویرایش</button>`;
+    row.querySelector('button').onclick = () => openUserSheet(u);
+    box.append(row);
+  }
+}
+function setRole(r) { S.usRole = r; document.querySelectorAll('#us-role button').forEach(b => b.classList.toggle('on', b.dataset.r === r)); $('#us-lib').disabled = r === 'admin'; if (r === 'admin') $('#us-lib').checked = true; }
+document.querySelectorAll('#us-role button').forEach(b => b.onclick = () => setRole(b.dataset.r));
+function genPass() { const cs = 'abcdefghjkmnpqrstuvwxyz23456789'; return Array.from(crypto.getRandomValues(new Uint8Array(10)), x => cs[x % cs.length]).join(''); }
+$('#us-gen').onclick = () => { $('#us-pass').value = genPass(); };
+function openUserSheet(u) {
+  S.usEdit = u || null;
+  $('#us-title').textContent = u ? `ویرایش ${u.display_name || u.username}` : 'کاربر جدید';
+  $('#us-username').value = u ? u.username : ''; $('#us-username').disabled = !!u;
+  $('#us-name').value = u ? (u.display_name || '') : '';
+  $('#us-pass').value = u ? '' : genPass();
+  $('#us-pass-label').textContent = u ? 'رمز جدید (خالی بگذارید تا عوض نشود)' : 'رمز عبور (حداقل ۶ کاراکتر)';
+  setRole(u ? u.role : 'staff');
+  $('#us-lib').checked = u ? (u.can_library || u.role === 'admin') : false;
+  $('#us-active').checked = u ? u.active : true;
+  $('#us-unlink').checked = false; $('#us-unlink-row').classList.toggle('hidden', !(u && u.linked));
+  $('#us-del').classList.toggle('hidden', !u);
+  openSheet('#user-sheet');
+}
+$('#new-user').onclick = () => openUserSheet(null);
+$('#us-cancel').onclick = () => closeSheets();
+$('#us-save').onclick = async () => {
+  const username = $('#us-username').value.trim().toLowerCase(), password = $('#us-pass').value.trim();
+  if (!username) return toast('نام کاربری را بنویسید');
+  const b = $('#us-save'); b.disabled = true;
+  const ok = await run(() => api('user_save', {
+    username, password, display_name: $('#us-name').value.trim(), role: S.usRole,
+    can_library: $('#us-lib').checked, active: $('#us-active').checked, unlink: $('#us-unlink').checked,
+  }), 'ذخیره شد');
+  b.disabled = false;
+  if (ok) {
+    closeSheets();
+    if (password) {
+      const text = `ورود به استودیو نقرینو\nنام کاربری: ${username}\nرمز: ${password}`;
+      try { await navigator.clipboard.writeText(text); toast('ذخیره شد؛ نام کاربری و رمز کپی شد تا برای کارمند بفرستید', 5000); }
+      catch (e) { tg && tg.showAlert ? tg.showAlert(text) : alert(text); }
+    }
+  }
+};
+$('#us-del').onclick = async () => {
+  const u = S.usEdit; if (!u) return;
+  if (!(await confirmBox(`کاربر «${u.display_name || u.username}» حذف شود؟`))) return;
+  if (await run(() => api('user_delete', { username: u.username }), 'حذف شد')) closeSheets();
+};
+
+// ---------------- settings (admin) ----------------
+function renderSettings() {
+  const box = $('#settings-list'); box.innerHTML = '';
+  for (const s of (S.cfg.settings || [])) {
+    const isKey = s.key === 'image_api_key';
+    const row = document.createElement('div'); row.className = 'set-row';
+    row.innerHTML = `<div class="h"><b>${esc(s.label)}</b><small dir="ltr">${esc(s.key)}</small></div>
+      <div class="in"><input type="${isKey ? 'password' : 'text'}" value="${isKey ? '' : esc(s.value)}" placeholder="${isKey ? esc(s.value || 'خالی') : esc(s.hint)}"><button class="mini add">ذخیره</button></div>
+      <small class="hint">${esc(s.hint)}</small>`;
+    const inp = row.querySelector('input');
+    row.querySelector('button').onclick = async () => {
+      if (isKey && !inp.value.trim()) return toast('کلید جدید را وارد کنید');
+      await run(() => api('setting_save', { key: s.key, value: inp.value.trim() }), 'ذخیره شد');
+    };
+    box.append(row);
+  }
+  const pl = $('#prompt-list'); pl.innerHTML = '';
+  for (const p of (S.cfg.prompts || [])) {
+    const d = document.createElement('details'); d.className = 'card';
+    d.innerHTML = `<summary>${esc(p.label)}<small dir="ltr">${esc(p.key)} · ${fa(p.prompt.length)} حرف</small></summary>
+      <textarea class="code" style="margin-top:10px">${esc(p.prompt)}</textarea>
+      <button class="btn" style="margin-top:8px;font-size:14px;padding:11px">ذخیره این پرامپت</button>`;
+    d.querySelector('button').onclick = async () => {
+      if (await run(() => api('prompt_save', { key: p.key, prompt: d.querySelector('textarea').value }), 'پرامپت ذخیره شد')) d.open = false;
+    };
+    pl.append(d);
+  }
+}
+
+// ---------------- sheets, tabs & boot ----------------
+function openSheet(sel) { $(sel).classList.remove('hidden'); tg && tg.MainButton.hide(); tg && tg.BackButton.show(); }
+function closeSheets() { document.querySelectorAll('.sheet').forEach(s => s.classList.add('hidden')); tg && tg.BackButton.hide(); updateButton(); }
+tg && tg.BackButton.onClick(closeSheets);
+
+function allowedTabs() {
+  const me = S.cfg.me || {};
+  return ['new'].concat(me.can_library ? ['lib'] : [], me.admin ? ['users', 'settings'] : []);
+}
 function switchTab(t) {
+  const allowed = allowedTabs();
+  if (!allowed.includes(t)) t = 'new';
   S.tab = t;
-  $('#tab-new').classList.toggle('on', t === 'new'); $('#tab-lib').classList.toggle('on', t === 'lib');
-  $('#view-new').classList.toggle('hidden', t !== 'new'); $('#view-lib').classList.toggle('hidden', t !== 'lib');
+  document.querySelectorAll('#tabs button').forEach(b => { b.classList.toggle('hidden', !allowed.includes(b.dataset.tab)); b.classList.toggle('on', b.dataset.tab === t); });
+  $('#tabs').classList.toggle('hidden', allowed.length < 2);
+  for (const v of ['new', 'lib', 'users', 'settings']) $(`#view-${v}`).classList.toggle('hidden', v !== t);
+  $('#view-login').classList.add('hidden');
   updateButton();
 }
-$('#tab-new').onclick = () => switchTab('new');
-$('#tab-lib').onclick = () => switchTab('lib');
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => { haptic(); switchTab(b.dataset.tab); });
+
+function renderAll() {
+  const me = S.cfg.me || {};
+  $('#hello').textContent = `سلام ${me.name || ''} 👋`;
+  $('#who').textContent = me.owner ? '👑 مدیر اصلی' : `${me.admin ? '🛡' : '👤'} ${me.username || ''} · خروج`;
+  $('#who').classList.remove('hidden');
+  $('#mock-banner').classList.toggle('hidden', !S.cfg.mock);
+  renderCats(); renderChars(); renderModes();
+  if (me.can_library) renderLibrary();
+  if (me.admin) { renderUsers(); renderSettings(); }
+}
+function start(cfg) {
+  S.cfg = cfg;
+  renderAll();
+  switchTab(S.tab && S.tab !== 'login' ? S.tab : 'new');
+}
 
 (async () => {
-  try {
-    S.cfg = await api('config');
-  } catch (e) {
-    document.querySelector('main').innerHTML = `<div class="card done"><div class="big">⚠️</div><p>${esc(e.message)}</p></div>`;
+  S.tab = qs.get('tab') || 'new';
+  if (!inTelegram) {
+    document.querySelector('main').innerHTML = '<div class="card done"><div class="big">📱</div><p>این صفحه فقط داخل ربات تلگرام کار می‌کند. ربات را باز کنید و «🎨 ساخت عکس» را بزنید.</p></div>';
     return;
   }
-  const u = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
-  if (u && u.first_name) $('#hello').textContent = `سلام ${u.first_name} 👋`;
-  renderCats(); renderChars(); renderModes(); renderLibrary(); updateButton();
-  if (!S.cfg.characters.length && !S.cfg.categories.some(c => c.ind || c.mod)) toast('اول از تب «کتابخانه» رفرنس‌ها و کاراکترها را اضافه کنید.', 5000);
+  try {
+    start(await api('config'));
+  } catch (e) {
+    if (e instanceof NeedLogin) return;
+    document.querySelector('main').innerHTML = `<div class="card done"><div class="big">⚠️</div><p>${esc(e.message)}</p></div>`;
+  }
 })();
 </script>
 </body>
