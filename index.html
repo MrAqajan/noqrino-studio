@@ -110,7 +110,7 @@ textarea.in{min-height:84px;resize:vertical;line-height:1.8}
 .aimain{border:1.5px solid var(--line)}.aimain.on{border-color:color-mix(in srgb,var(--ok) 55%,transparent)}
 .aimain .sw b{font-size:16px}
 .tg:disabled{opacity:.35}
-#aiTestOut{margin-top:10px;font-size:13.5px;line-height:1.8}
+#aiTestOut{margin:0 0 6px;font-size:13.5px;line-height:1.8}
 .tg{appearance:none;width:44px;height:26px;border-radius:99px;background:var(--line);position:relative;flex:none;transition:background .15s}
 .tg::after{content:'';position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
 .tg:checked{background:var(--ok)}.tg:checked::after{transform:translateX(-18px)}
@@ -601,10 +601,11 @@ function vAI(c, setRow) {
       ${sw('analyst_enabled', 'تشخیص خودکار ابعاد و وزن', 'وقتی عکاس «تشخیص خودکار» را بزند، فیلدهای خالی از روی عکس خوانده می‌شوند.')}
       ${sw('prompt_assistant', 'دستیار پرامپت', `قبل از هر عکس، جزئیات محصول و ${faNum(ai.knowledge || 0)} متن دانش برند را بررسی و به پرامپت اضافه می‌کند (کمی کندتر و یک فراخوانی بیشتر).`)}</div>
     <div class="group"><div class="gh"><h3>وضعیت</h3><button class="btn sm dark" data-a="aiTest">تست اتصال</button></div>
+      <div id="aiTestOut"></div>
       <div class="spec"><span>ساخت عکس</span>${why(ai.image, base.concat([[ai.provider === 'mock', 'سرویس تصویر روی mock (تست) است'], [!sv('image_model'), 'مدل تصویری خالی است']]))}</div>
       <div class="spec"><span>تحلیل ابعاد و وزن</span>${why(ai.analyst, base.concat([[!t.analyst_enabled, 'خاموش'], [!sv('analyst_model'), 'مدل تحلیل خالی است']]))}</div>
       <div class="spec"><span>دستیار پرامپت</span>${why(ai.assistant, base.concat([[!t.prompt_assistant, 'خاموش'], [!sv('assistant_model'), 'مدل دستیار خالی است']]))}</div>
-      <div id="aiTestOut"></div></div>
+</div>
     <div class="group"><div class="gh"><h3>اتصال API</h3><span class="hint">یک آدرس و کلید برای همه بخش‌ها</span></div>
       ${(c.settings || []).filter(s => s.group === 'ai').map(setRow).join('')}</div>`;
 }
@@ -844,6 +845,8 @@ const A = {
       box.innerHTML = r.connected
         ? `<b class="okc">✅ اتصال برقرار است</b> <span class="hint">(${faNum(r.ms)} میلی‌ثانیه · ${faNum(r.models)} مدل در دسترس)</span>${(r.missing || []).length ? `<br><b style="color:var(--warn)">⚠️ این مدل‌ها در لیست سرویس پیدا نشد:</b> <span dir="ltr">${r.missing.map(esc).join('، ')}</span>` : ''}`
         : `<b style="color:var(--err)">❌ ${esc(r.error)}</b>${r.detail ? `<br><small class="hint" dir="ltr">${esc(r.detail)}</small>` : ''}`;
+      toast(r.connected ? '✅ اتصال برقرار است' : '❌ اتصال برقرار نشد', 4000);
+      box.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   },
   async setSave(el) {
