@@ -104,6 +104,13 @@ textarea.in{min-height:84px;resize:vertical;line-height:1.8}
 .unit em{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-style:normal;color:var(--muted);font-size:12.5px}
 .sw{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .sw:last-child{border-bottom:0}
+.sw > span{display:flex;flex-direction:column;gap:2px}
+.sw small.d{font-size:12.5px;color:var(--muted);line-height:1.6}
+.okc{color:var(--ok)!important}.offc{color:var(--muted)!important;font-weight:600}
+.aimain{border:1.5px solid var(--line)}.aimain.on{border-color:color-mix(in srgb,var(--ok) 55%,transparent)}
+.aimain .sw b{font-size:16px}
+.tg:disabled{opacity:.35}
+#aiTestOut{margin-top:10px;font-size:13.5px;line-height:1.8}
 .tg{appearance:none;width:44px;height:26px;border-radius:99px;background:var(--line);position:relative;flex:none;transition:background .15s}
 .tg::after{content:'';position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .15s}
 .tg:checked{background:var(--ok)}.tg:checked::after{transform:translateX(-18px)}
@@ -393,7 +400,7 @@ function vCreate() {
   return `
   <h2>ساخت عکس محصول</h2>
   <p class="lead">عکس محصول را بدهید؛ SKU خودکار ساخته می‌شود و عکس صنعتی یا مدلینگ تحویل می‌گیرید.</p>
-  ${c.mock ? `<div class="mock">سرویس تصویر روی حالت تست است؛ همان عکس خودتان برمی‌گردد.</div>` : ''}
+  ${c.paused ? `<div class="mock">ساخت عکس فعلاً متوقف است. کمی بعد دوباره سر بزنید.</div>` : c.mock ? `<div class="mock">${c.ai && !c.ai.on ? 'هوش مصنوعی خاموش است؛ حالت تست' : 'سرویس تصویر روی حالت تست است'}: همان عکس خودتان برمی‌گردد.</div>` : ''}
   <div class="cform">
   <div class="group g-photo">
     <div class="drop">${f.url ? `<img src="${f.url}" alt=""><button class="x" data-a="clearPhoto">عوض کردن عکس</button>` : `<div class="ph"><strong>عکس محصول</strong>از گالری یا دوربین انتخاب کنید</div>`}
@@ -436,7 +443,7 @@ function skuPreview() {
   return [f.supplier || '??', cat ? cat.code : '??', f.plating || '??', dayShort(S.cfg.day), '##'].concat(f.gem ? [f.gem] : []).join('-');
 }
 function renderDock() {
-  const f = S.f, ready = f.file && f.cat && f.mode && f.supplier && f.plating;
+  const f = S.f, ready = f.file && f.cat && f.mode && f.supplier && f.plating && !S.cfg.paused;
   const d = $('#dock'); d.classList.remove('hidden');
   d.innerHTML = `<div class="in-dock"><div class="meta"><span class="sku">${esc(skuPreview())}</span><span class="hint">${ready ? (f.mode === 'both' ? '۲ عکس ساخته می‌شود' : '۱ عکس ساخته می‌شود') : 'عکس، دسته، نوع و آبکاری را انتخاب کنید'}</span></div>
     <button class="btn pri" data-a="create" ${ready && !S.busy ? '' : 'disabled'}>${S.busy ? '<span class="spin"></span>' : 'ساخت عکس'}</button></div>`;
@@ -560,7 +567,7 @@ function optSheet(kind, o) {
 function vManage() {
   const c = S.cfg, segs = [];
   if (P('users')) segs.push(['users', 'کاربران'], ['roles', 'نقش‌ها']);
-  if (P('settings')) segs.push(['settings', 'تنظیمات'], ['prompts', 'پرامپت‌ها']);
+  if (P('settings')) segs.push(['ai', 'AI'], ['settings', 'تنظیمات'], ['prompts', 'پرامپت‌ها']);
   if (c.me.owner) segs.push(['backup', 'بکاپ']);
   if (!segs.some(s => s[0] === S.mg)) S.mg = segs[0] ? segs[0][0] : '';
   let body = '';
@@ -570,14 +577,36 @@ function vManage() {
   if (S.mg === 'roles') body = `<div class="group list">${(c.roles || []).map((r, i) => `<button class="li" data-a="roleEdit" data-i="${i}"><div class="av">${faNum(r.users)}</div>
       <div class="t"><b>${esc(r.name)}</b><small>روزانه ${r.quota_day < 0 ? '∞' : faNum(r.quota_day)} · ماهانه ${r.quota_month < 0 ? '∞' : faNum(r.quota_month)} · ${faNum(Object.values(r.perms).filter(Boolean).length)} دسترسی</small></div></button>`).join('')}</div>
     <button class="btn dark block" data-a="roleEdit" data-i="-1">+ نقش جدید</button>`;
-  if (S.mg === 'settings') body = `<div class="group">${(c.settings || []).map(s => `<label class="f"><span>${esc(s.label)} <small class="hint">${esc(s.hint)}</small></span>
-      <div class="row" style="flex-wrap:nowrap"><input class="in" dir="ltr" id="st-${s.key}" value="${esc(s.value)}" ${s.key === 'image_api_key' ? 'placeholder="برای تغییر، کلید جدید را وارد کنید"' : ''}><button class="btn sm" data-a="setSave" data-k="${s.key}">ذخیره</button></div></label>`).join('')}</div>`;
+  const setRow = s => `<label class="f"><span>${esc(s.label)} <small class="hint">${esc(s.hint)}</small></span>
+      <div class="row" style="flex-wrap:nowrap"><input class="in" dir="ltr" id="st-${s.key}" value="${esc(s.value)}" ${s.key === 'image_api_key' ? 'placeholder="برای تغییر، کلید جدید را وارد کنید"' : ''}><button class="btn sm" data-a="setSave" data-k="${s.key}">ذخیره</button></div></label>`;
+  if (S.mg === 'settings') body = `<div class="group">${(c.settings || []).filter(s => s.group !== 'ai').map(setRow).join('')}</div>`;
+  if (S.mg === 'ai') body = vAI(c, setRow);
   if (S.mg === 'prompts') body = `<div class="group">${(c.prompts || []).map(p => `<details class="pr"><summary>${esc(p.label)}</summary>
       <textarea class="in" dir="ltr" style="min-height:220px;margin-top:8px;font-size:13px" id="pr-${p.key}">${esc(p.prompt)}</textarea>
       <button class="btn sm pri" style="margin-top:6px" data-a="prSave" data-k="${p.key}">ذخیره پرامپت</button></details>`).join('')}</div>`;
   if (S.mg === 'backup') body = `<div class="group"><h3>بکاپ کامل</h3><p class="hint">همه جدول‌ها (تنظیمات، پرامپت‌ها، نقش‌ها، کاربران، کتابخانه، محصولات و عکس‌ها) در یک فایل JSON به چت تلگرام شما فرستاده می‌شود. برای جابه‌جایی سرور یا اطمینان، هفته‌ای یک بار بگیرید.</p>
       <button class="btn pri block" data-a="backup">ارسال بکاپ به تلگرام</button></div>`;
   return `<h2>مدیریت</h2><div class="seg" style="margin:10px 0">${segs.map(([k, t]) => `<button data-a="mg" data-v="${k}" aria-pressed="${S.mg === k}">${t}</button>`).join('')}</div>${body}`;
+}
+// AI tab: master switch, per-feature switches, status, connection test and the API settings (one key for everything)
+function vAI(c, setRow) {
+  const ai = c.ai || {}, t = ai.toggles || {}, sv = k => ((c.settings || []).find(s => s.key === k) || {}).value || '';
+  const why = (ok, reasons) => ok ? '<b class="okc">فعال</b>' : `<b class="offc">${reasons.find(r => r[0])[1]}</b>`;
+  const base = [[!t.ai_enabled, 'هوش مصنوعی خاموش است'], [!ai.ready, 'آدرس یا کلید API خالی است']];
+  const sw = (k, title, desc) => `<div class="sw"><span>${title}<small class="d">${desc}</small></span><input type="checkbox" class="tg" data-a="aiToggle" data-k="${k}" ${t[k] ? 'checked' : ''} ${t.ai_enabled ? '' : 'disabled'} aria-label="${title}"></div>`;
+  return `<div class="group aimain ${t.ai_enabled ? 'on' : ''}"><div class="sw"><span><b>هوش مصنوعی</b><small class="d">${t.ai_enabled
+      ? 'روشن است؛ عکس‌ها با هوش مصنوعی ساخته می‌شوند.' : 'خاموش است؛ کارمندان نمی‌توانند عکس بسازند و هیچ هزینه‌ای از API کم نمی‌شود. خودتان در حالت تست کار می‌کنید.'}</small></span>
+      <input type="checkbox" class="tg" data-a="aiToggle" data-k="ai_enabled" ${t.ai_enabled ? 'checked' : ''} aria-label="هوش مصنوعی"></div></div>
+    <div class="group"><div class="gh"><h3>بخش‌ها</h3></div>
+      ${sw('analyst_enabled', 'تشخیص خودکار ابعاد و وزن', 'وقتی عکاس «تشخیص خودکار» را بزند، فیلدهای خالی از روی عکس خوانده می‌شوند.')}
+      ${sw('prompt_assistant', 'دستیار پرامپت', `قبل از هر عکس، جزئیات محصول و ${faNum(ai.knowledge || 0)} متن دانش برند را بررسی و به پرامپت اضافه می‌کند (کمی کندتر و یک فراخوانی بیشتر).`)}</div>
+    <div class="group"><div class="gh"><h3>وضعیت</h3><button class="btn sm dark" data-a="aiTest">تست اتصال</button></div>
+      <div class="spec"><span>ساخت عکس</span>${why(ai.image, base.concat([[ai.provider === 'mock', 'سرویس تصویر روی mock (تست) است'], [!sv('image_model'), 'مدل تصویری خالی است']]))}</div>
+      <div class="spec"><span>تحلیل ابعاد و وزن</span>${why(ai.analyst, base.concat([[!t.analyst_enabled, 'خاموش'], [!sv('analyst_model'), 'مدل تحلیل خالی است']]))}</div>
+      <div class="spec"><span>دستیار پرامپت</span>${why(ai.assistant, base.concat([[!t.prompt_assistant, 'خاموش'], [!sv('assistant_model'), 'مدل دستیار خالی است']]))}</div>
+      <div id="aiTestOut"></div></div>
+    <div class="group"><div class="gh"><h3>اتصال API</h3><span class="hint">یک آدرس و کلید برای همه بخش‌ها</span></div>
+      ${(c.settings || []).filter(s => s.group === 'ai').map(setRow).join('')}</div>`;
 }
 function userSheet(u) {
   const roles = S.cfg.roles || [];
@@ -802,6 +831,20 @@ const A = {
   async roleDel(el) {
     if (!await ask('این نقش حذف شود؟')) return;
     await busy(el, async () => { Object.assign(S.cfg, await api('role_del', { id: el.dataset.id })); closeSheet(); render(); });
+  },
+  async aiToggle(el) {
+    const k = el.dataset.k, v = el.checked ? 'on' : 'off';
+    if (k === 'ai_enabled' && v === 'off' && !await ask('هوش مصنوعی خاموش شود؟ تا روشن شدن دوباره، کارمندان نمی‌توانند عکس بسازند.')) return;
+    try { Object.assign(S.cfg, await api('setting_save', { key: k, value: v })); haptic('medium'); toast(v === 'on' ? 'روشن شد' : 'خاموش شد'); } catch (e) { fail(e); }
+    render();
+  },
+  async aiTest(el) {
+    await busy(el, async () => {
+      const r = await api('ai_test'), box = $('#aiTestOut'); if (!box) return;
+      box.innerHTML = r.connected
+        ? `<b class="okc">✅ اتصال برقرار است</b> <span class="hint">(${faNum(r.ms)} میلی‌ثانیه · ${faNum(r.models)} مدل در دسترس)</span>${(r.missing || []).length ? `<br><b style="color:var(--warn)">⚠️ این مدل‌ها در لیست سرویس پیدا نشد:</b> <span dir="ltr">${r.missing.map(esc).join('، ')}</span>` : ''}`
+        : `<b style="color:var(--err)">❌ ${esc(r.error)}</b>${r.detail ? `<br><small class="hint" dir="ltr">${esc(r.detail)}</small>` : ''}`;
+    });
   },
   async setSave(el) {
     const k = el.dataset.k, v = val('st-' + k);
