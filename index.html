@@ -52,7 +52,13 @@ header .row{max-width:var(--w);margin:0 auto;display:flex;align-items:center;jus
 @media (prefers-reduced-motion:reduce){.loaded .sheen{animation:none}}
 .who{display:flex;align-items:center;gap:8px;border:1px solid rgba(238,241,240,.22);background:rgba(238,241,240,.06);border-radius:999px;padding:5px 6px 5px 12px;color:var(--brand-ink);font-size:13px}
 .who b{font-weight:600}
-.who i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(238,241,240,.14);font-size:13px}
+.who i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(238,241,240,.14);font-size:13px;overflow:hidden}
+.who i img,.av img,.avbig img{width:100%;height:100%;object-fit:cover;display:block}
+.avrow{display:flex;align-items:center;gap:14px}
+.avbig{width:76px;height:76px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:28px;font-weight:800;overflow:hidden;flex:none;border:2px solid var(--line)}
+.avrow .btns{display:flex;flex-wrap:wrap;gap:8px}
+.avrow label.btn{position:relative;overflow:hidden}
+.avrow label.btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .sub{max-width:var(--w);margin:6px auto 0;font-size:13px;opacity:.78}
 
 main{max-width:var(--w);margin:0 auto;padding:16px 16px calc(var(--nav) + 120px)}
@@ -315,7 +321,7 @@ function download(url, name) {
 // ---- state ----
 const S = {
   cfg: null, tab: qs.get('tab') || 'new', busy: false,
-  f: { file: null, url: '', cat: '', mode: '', char: 'random', supplier: '', plating: '', gem: '', dims: {}, weight: '', note: '' },
+  f: { file: null, url: '', cat: '', mode: '', char: 'random', supplier: '', plating: '', gem: '', dims: {}, weight: '', note: '', auto: store.get('auto') !== 'off' },
   products: null, pq: '', pstatus: '', lib: null, libSeg: 'cats', mg: '',
 };
 const P = k => !!(S.cfg && S.cfg.me.perms[k]);
@@ -327,7 +333,19 @@ const TABS = [
   { id: 'manage', fa: 'مدیریت', ok: () => P('users') || P('settings') || (S.cfg && S.cfg.me.owner), icon: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>' },
 ];
 const GEM = { BL: '#2f6fd6', RE: '#c0392b', GR: '#2e8b57', WH: '#f4f4f4', BK: '#1f1f1f', PK: '#e58fb1', PU: '#7d4bb3', YE: '#e2b007', MX: 'conic-gradient(#c0392b,#e2b007,#2e8b57,#2f6fd6,#7d4bb3,#c0392b)' };
-const PLATE = { GO: 'linear-gradient(135deg,#f6dd8c,#c99a2e,#f3d27a)', WH: 'linear-gradient(135deg,#ffffff,#c4c9ce,#f2f4f5)', RO: 'linear-gradient(135deg,#f3c4b0,#b9735a,#efb8a1)' };
+const PLATE = { GO: 'linear-gradient(135deg,#f6dd8c,#c99a2e,#f3d27a)', RH: 'linear-gradient(135deg,#ffffff 0%,#cfd6dd 35%,#ffffff 55%,#a9b3bc 80%,#eef2f5 100%)',
+  WH: 'radial-gradient(circle at 35% 30%,#ffffff 0%,#fbfcfd 55%,#e9edf1 100%)', RO: 'linear-gradient(135deg,#f3c4b0,#b9735a,#efb8a1)' };
+// profile photo: chosen in the app, otherwise the Telegram photo
+const tgPhoto = () => { try { return (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.photo_url) || ''; } catch (e) { return ''; } };
+const avatarOf = me => (me && me.avatar) || tgPhoto();
+const avHtml = (src, name) => src ? `<img src="${esc(src)}" alt="" loading="lazy">` : esc(String(name || '؟').trim().charAt(0));
+async function squareJpeg(file, size = 192) {
+  const bmp = await createImageBitmap(file);
+  const s = Math.min(bmp.width, bmp.height);
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  c.getContext('2d').drawImage(bmp, (bmp.width - s) / 2, (bmp.height - s) / 2, s, s, 0, 0, size, size);
+  return c.toDataURL('image/jpeg', 0.82);
+}
 const swatch = (map, code) => `<i class="dot" style="background:${map[code] || 'var(--accent)'}"></i>`;
 const STATUS = { ready: 'آماده', processing: 'در حال ساخت', failed: 'بدون عکس', published: 'روی سایت' };
 const dayShort = d => { const m = String(d || '').match(/^\d\d(\d\d)-(\d\d)-(\d\d)$/); return m ? m[1] + m[2] + m[3] : '######'; };
@@ -343,7 +361,7 @@ function render() {
   $('#navin').innerHTML = tabs.map(t => `<button data-a="tab" data-v="${t.id}" ${t.id === S.tab ? 'aria-current="page"' : ''}><svg viewBox="0 0 24 24">${t.icon}</svg>${t.fa}</button>`).join('');
   const me = S.cfg.me;
   $('#who').classList.remove('hidden');
-  $('#who').innerHTML = `<b>${esc(me.name)}</b><i>${esc((me.name || '؟').trim().charAt(0))}</i>`;
+  $('#who').innerHTML = `<b>${esc(me.name)}</b><i>${avHtml(avatarOf(me), me.name)}</i>`;
   $('#sub').textContent = me.role;
   v.innerHTML = S.tab === 'new' ? vCreate() : S.tab === 'products' ? vProducts() : S.tab === 'lib' ? vLibrary() : S.tab === 'manage' ? vManage()
     : `<div class="empty"><strong>دسترسی‌ای برای شما تعریف نشده</strong>از مدیر بخواهید نقش شما را تنظیم کند.</div>`;
@@ -403,12 +421,16 @@ function vCreate() {
     ${c.options.gem.map(o => `<button class="chip" data-a="set" data-k="gem" data-v="${esc(o.code)}" aria-pressed="${f.gem === o.code}">${swatch(GEM, o.code)}${esc(o.name)}</button>`).join('')}</div>
   </div>
   ${cat ? `<div class="group"><div class="gh"><h3>ابعاد و وزن</h3><span class="hint">برای مقیاس واقعی در عکس مدلینگ</span></div>
-    <div class="grid2">${(cat.dims || []).map((d, i) => `<label class="f"><span>${esc(d.n)}</span><div class="unit"><input class="in" inputmode="decimal" data-f="dim" data-i="${i}" value="${esc(f.dims[d.n] || '')}"><em>${esc(d.u)}</em></div></label>`).join('')}
-    <label class="f"><span>وزن</span><div class="unit"><input class="in" inputmode="decimal" data-f="weight" value="${esc(f.weight)}"><em>گرم</em></div></label></div></div>` : ''}
+    ${c.analyze || c.me.owner ? `<div class="seg" role="group" aria-label="تشخیص ابعاد و وزن" style="margin-bottom:8px">
+      <button data-a="auto" data-v="on" aria-pressed="${f.auto}">✨ تشخیص خودکار</button><button data-a="auto" data-v="off" aria-pressed="${!f.auto}">بدون تحلیل</button></div>
+      <p class="hint" style="margin:0 2px 10px">${!c.analyze ? 'مدل تحلیل هنوز در «مدیریت ← تنظیمات ← مدل تحلیل ابعاد و وزن» تعریف نشده.' : f.auto ? 'فیلدهای خالی از روی عکس خوانده می‌شوند؛ هر فیلدی را خودتان پر کنید، همان می‌ماند. خط‌کش یا ترازو در عکس دقت را بالا می‌برد.' : 'فقط همین مقدارهایی که می‌نویسید استفاده می‌شود.'}</p>` : ''}
+    <div class="grid2">${(cat.dims || []).map((d, i) => `<label class="f"><span>${esc(d.n)}</span><div class="unit"><input class="in" inputmode="decimal" data-f="dim" data-i="${i}" value="${esc(f.dims[d.n] || '')}" ${autoOn() ? 'placeholder="خودکار"' : ''}><em>${esc(d.u)}</em></div></label>`).join('')}
+    <label class="f"><span>وزن</span><div class="unit"><input class="in" inputmode="decimal" data-f="weight" value="${esc(f.weight)}" ${autoOn() ? 'placeholder="خودکار"' : ''}><em>گرم</em></div></label></div></div>` : ''}
   <div class="group"><label class="f" style="margin:0"><span>توضیح (اختیاری)</span><textarea class="in" data-f="note" placeholder="مثلا: قفل زنجیر باز باشد">${esc(f.note)}</textarea></label></div>
   <div class="quota"><span>امروز ${qline('day')}</span><span>این ماه ${qline('month')}</span></div>
   </div>`;
 }
+function autoOn() { return !!(S.cfg && S.cfg.analyze && S.f.auto); }
 function skuPreview() {
   const f = S.f, cat = curCat();
   return [f.supplier || '??', cat ? cat.code : '??', f.plating || '??', dayShort(S.cfg.day), '##'].concat(f.gem ? [f.gem] : []).join('-');
@@ -542,7 +564,7 @@ function vManage() {
   if (c.me.owner) segs.push(['backup', 'بکاپ']);
   if (!segs.some(s => s[0] === S.mg)) S.mg = segs[0] ? segs[0][0] : '';
   let body = '';
-  if (S.mg === 'users') body = `<div class="group list">${(c.users || []).map((u, i) => `<button class="li" data-a="userEdit" data-i="${i}"><div class="av">${esc((u.display_name || u.username).charAt(0))}</div>
+  if (S.mg === 'users') body = `<div class="group list">${(c.users || []).map((u, i) => `<button class="li" data-a="userEdit" data-i="${i}"><div class="av">${avHtml(u.avatar, u.display_name || u.username)}</div>
       <div class="t"><b>${esc(u.display_name || u.username)}</b><small><span dir="ltr">${esc(u.username)}</span> · ${esc(u.role_name)}${u.linked ? ' · وصل به تلگرام' : ''}</small></div><i class="stat ${u.active ? '' : 'off'}"></i></button>`).join('') || '<div class="empty">هنوز کاربری نساخته‌اید</div>'}</div>
     <button class="btn dark block" data-a="userEdit" data-i="-1">+ کاربر جدید</button>`;
   if (S.mg === 'roles') body = `<div class="group list">${(c.roles || []).map((r, i) => `<button class="li" data-a="roleEdit" data-i="${i}"><div class="av">${faNum(r.users)}</div>
@@ -587,6 +609,10 @@ function accountSheet() {
   const bar = x => x.limit < 0 ? `<span class="hint">نامحدود · ${faNum(x.used)} عکس</span>` : `<span class="hint">${faNum(x.used)} از ${faNum(x.limit)}</span><div class="meter"><i style="width:${Math.min(100, x.used / Math.max(1, x.limit) * 100)}%"></i></div>`;
   const th = store.get('theme') || '';
   return `<div class="sh"><h2>${esc(me.name)}</h2><button class="x0" data-a="close" aria-label="بستن">×</button></div>
+  <div class="group"><div class="avrow"><div class="avbig" id="avbig">${avHtml(avatarOf(me), me.name)}</div>
+    <div><h3>عکس پروفایل</h3><span class="hint">${me.avatar ? 'عکس انتخابی شما' : tgPhoto() ? 'فعلا عکس تلگرام شما نمایش داده می‌شود' : 'هنوز عکسی انتخاب نشده'}</span>
+    <div class="btns" style="margin-top:8px"><label class="btn sm dark">انتخاب عکس<input type="file" accept="image/*" data-a="avatarPick" aria-label="انتخاب عکس پروفایل"></label>
+    ${me.avatar ? '<button class="btn sm" data-a="avatarDel">حذف</button>' : ''}</div></div></div></div>
   <div class="group"><div class="spec"><span>نقش</span><b>${esc(me.role)}</b></div>${me.username ? `<div class="spec"><span>نام کاربری</span><b dir="ltr">${esc(me.username)}</b></div>` : ''}</div>
   ${me.perms.generate ? `<div class="group"><div class="gh"><h3>عکس‌های امروز</h3></div>${bar(q.day)}<div class="gh" style="margin-top:12px"><h3>عکس‌های این ماه</h3></div>${bar(q.month)}</div>` : ''}
   <div class="group"><div class="gh"><h3>ظاهر</h3></div><div class="seg">${[['', 'خودکار'], ['light', 'روز'], ['dark', 'شب']].map(([k, t]) => `<button data-a="theme" data-v="${k}" aria-pressed="${th === k}">${t}</button>`).join('')}</div></div>
@@ -642,12 +668,23 @@ const A = {
     S.f.dims = {}; haptic(); render();
   },
   mode(el) { S.f.mode = el.dataset.v; haptic(); render(); },
+  auto(el) { S.f.auto = el.dataset.v === 'on'; store.set('auto', S.f.auto ? 'on' : 'off'); haptic(); render(); },
+  async avatarPick(el) {
+    const f = el.files && el.files[0]; if (!f) return;
+    const box = $('#avbig'); if (box) box.innerHTML = '<span class="spin"></span>';
+    try { S.cfg = await api('avatar_save', { avatar: await squareJpeg(f) }); haptic('medium'); toast('عکس پروفایل ذخیره شد'); }
+    catch (e) { fail(e); }
+    render(); if (sheetOpen()) $('#sheetBody').innerHTML = accountSheet();
+  },
+  async avatarDel(el) {
+    await busy(el, async () => { S.cfg = await api('avatar_del'); toast('عکس پروفایل حذف شد'); render(); $('#sheetBody').innerHTML = accountSheet(); });
+  },
   async create(el) {
     const f = S.f, cat = curCat(); if (!f.file || !cat) return;
     S.busy = true; renderDock();
     try {
       const r = await api('create', { category: f.cat, mode: f.mode, character: f.char, supplier: f.supplier, plating: f.plating, gem: f.gem,
-        dims: (cat.dims || []).map(d => ({ n: d.n, v: enNum(f.dims[d.n] || '') })), weight: enNum(f.weight), note: f.note }, [f.file]);
+        dims: (cat.dims || []).map(d => ({ n: d.n, v: enNum(f.dims[d.n] || '') })), weight: enNum(f.weight), note: f.note, auto: autoOn() }, [f.file]);
       haptic('heavy');
       S.cfg.me.quota = r.quota || S.cfg.me.quota; S.cfg.supplier = f.supplier;
       Object.assign(S.f, { file: null, url: '', dims: {}, weight: '', note: '', gem: '' }); S.products = null;
