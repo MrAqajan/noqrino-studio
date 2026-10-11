@@ -294,8 +294,14 @@ async function api(action, data = {}, files = []) {
   fd.append('payload', JSON.stringify(data));
   files.forEach((f, i) => fd.append('file' + i, f, f.name || `photo${i}.jpg`));
   let res;
-  try { res = await fetch(API, { method: 'POST', body: fd }); }
-  catch (e) { throw new Error('اتصال به سرور برقرار نشد. اینترنت را بررسی کنید.'); }
+  // never spin forever: if the server is busy the user gets a clear message instead of a stuck button
+  const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), action === 'create' ? 90000 : 45000);
+  try { res = await fetch(API, { method: 'POST', body: fd, signal: ctl.signal }); }
+  catch (e) {
+    throw new Error(e.name === 'AbortError'
+      ? (action === 'create' ? 'سرور دیر جواب داد. قبل از ساخت دوباره، تب «محصولات» را نگاه کنید؛ شاید ثبت شده باشد.' : 'سرور دیر جواب داد. چند لحظه بعد دوباره امتحان کنید.')
+      : 'اتصال به سرور برقرار نشد. اینترنت را بررسی کنید.');
+  } finally { clearTimeout(tm); }
   const j = await res.json().catch(() => ({}));
   if (j && j.needLogin && action !== 'login') { S.cfg = null; render(); throw new NeedLogin(j.error || ''); }
   if (!res.ok || j.ok === false) throw new Error(j.error || `خطای سرور (${res.status})`);
